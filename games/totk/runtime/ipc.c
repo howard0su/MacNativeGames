@@ -21,6 +21,12 @@ static Service services[32];
 static unsigned nservices;
 static __thread uint64_t trace_fp, trace_lr;   /* guest frame of the current request, for failure reports */
 static pthread_mutex_t registry = PTHREAD_MUTEX_INITIALIZER;
+/* Domain tables are shared by cloned HIPC handles. Table entries own service state. */
+typedef struct IpcDomain {
+    unsigned refs, next;
+    IpcSession *objects[64];
+} IpcDomain;
+static pthread_mutex_t domains = PTHREAD_MUTEX_INITIALIZER;
 
 void runtime_ipc_register(const char *name, IpcHandler handler, IpcOpen open, void (*close)(void *)) {
     pthread_mutex_lock(&registry);
@@ -32,7 +38,7 @@ void runtime_ipc_register(const char *name, IpcHandler handler, IpcOpen open, vo
 static IpcSession *session_new(const char *name, IpcHandler handler, void *state, void (*close)(void *)) {
     IpcSession *s = calloc(1, sizeof *s);
     if (!s) runtime_fail("IPC session allocation");
-    *s = (IpcSession){name, handler, state, close};
+    *s = (IpcSession){.name = name, .handler = handler, .state = state, .close = close};
     return s;
 }
 uint32_t runtime_ipc_new_session(const char *name, IpcHandler handler, void *state, void (*close)(void *)) {
@@ -40,8 +46,42 @@ uint32_t runtime_ipc_new_session(const char *name, IpcHandler handler, void *sta
 }
 void runtime_ipc_session_closed(void *p) {
     IpcSession *s = p;
+    if (s->domain) {
+        pthread_mutex_lock(&domains);
+        IpcDomain *d = s->domain;
+        if (!--d->refs) {
+            for (unsigned i = 1; i < d->next; i++) {
+                IpcSession *obj = d->objects[i];
+                if (obj) {
+                    if (obj->close) obj->close(obj->state);
+                    free(obj);
+                }
+            }
+            free(d);
+        }
+        pthread_mutex_unlock(&domains);
+        free(s);
+        return;
+    }
     if (s->close) s->close(s->state);
     free(s);
+}
+void ipc_out_session(IpcSession *s, IpcResponse *rs, const char *name, IpcHandler handler,
+                     void *state, void (*close)(void *)) {
+    if (!s->domain) {
+        if (rs->nmove == 8) runtime_fail("IPC too many output sessions");
+        rs->move[rs->nmove++] = runtime_ipc_new_session(name, handler, state, close);
+        return;
+    }
+    IpcDomain *d = s->domain;  /* Domain dispatch holds the table lock. */
+    unsigned id = 1;
+    while (id < d->next && d->objects[id]) id++;
+    if (id == 64 || rs->nobjects == 8) runtime_fail("IPC domain object table full");
+    IpcSession *obj = session_new(name, handler, state, close);
+    obj->domain = d;
+    d->objects[id] = obj;
+    if (id == d->next) d->next++;
+    rs->objects[rs->nobjects++] = id;
 }
 void runtime_ipc_tmem_closed(void *p) { free(p); }
 
@@ -112,15 +152,23 @@ static void respond(uint32_t *m, int tipc, const IpcResponse *rs) {
         p[1] = (uint32_t)a;
     }
     uint8_t *words = (uint8_t *)p, *payload;
-    unsigned header = tipc ? 4 : 16;
+    unsigned header = tipc ? 4 : rs->domain ? 32 : 16;
     if (tipc) payload = words;
     else payload = (uint8_t *)out + (((words - (uint8_t *)out) + 15) & ~15);
-    unsigned used = (unsigned)(payload - words) + header + rs->data_size;
+    unsigned used = (unsigned)(payload - words) + header + rs->data_size + rs->nobjects * 4;
     unsigned nwords = tipc ? (used + 3) / 4 : (used + 16 + 3) / 4;   /* CMIF keeps alignment slack like libnx */
     if ((size_t)(words - (uint8_t *)out) + nwords * 4 > MSG_BYTES) runtime_fail("IPC response exceeds message buffer");
     if (tipc) memcpy(payload, &rs->result, 4);
-    else { uint32_t h[4] = {CMIF_OUT_MAGIC, 0, rs->result, 0}; memcpy(payload, h, 16); }
+    else {
+        uint8_t *cmif = payload;
+        if (rs->domain) {
+            uint32_t dh[4] = {rs->nobjects, 0, 0, 0};
+            memcpy(payload, dh, 16); cmif += 16;
+        }
+        uint32_t h[4] = {CMIF_OUT_MAGIC, 0, rs->result, 0}; memcpy(cmif, h, 16);
+    }
     memcpy(payload + header, rs->data, rs->data_size);
+    memcpy(payload + header + rs->data_size, rs->objects, rs->nobjects * 4);
     out[0] = (rs->nxout & 0xf) << 16;
     out[1] = (nwords & 0x3ff) | (special ? 1u << 31 : 0);
     memcpy(m, out, MSG_BYTES);
@@ -129,12 +177,30 @@ static void respond(uint32_t *m, int tipc, const IpcResponse *rs) {
 /* ---------- Control requests (CMIF) ---------- */
 static void control(IpcSession *s, const IpcRequest *rq, IpcResponse *rs) {
     switch (rq->cmd) {
+    case 0: {                                                               /* ConvertCurrentObjectToDomain */
+        pthread_mutex_lock(&domains);
+        if (s->domain) runtime_fail("IPC session is already a domain");
+        IpcDomain *d = calloc(1, sizeof *d);
+        if (!d) runtime_fail("IPC domain allocation");
+        d->refs = 1; d->next = 2;
+        d->objects[1] = session_new(s->name, s->handler, s->state, s->close);
+        d->objects[1]->domain = d;
+        s->close = NULL; s->domain = d;
+        pthread_mutex_unlock(&domains);
+        uint32_t id = 1; IPC_OUT(rs, id); return;
+    }
     case 3: { uint16_t n = POINTER_BUFFER_SIZE; IPC_OUT(rs, n); return; }   /* QueryPointerBufferSize */
-    case 2: case 4:                                                           /* CloneCurrentObject(Ex) */
-        rs->move[rs->nmove++] = runtime_ipc_new_session(s->name, s->handler, s->state, NULL);
+    case 2: case 4: {                                                         /* CloneCurrentObject(Ex) */
+        IpcSession *clone = session_new(s->name, s->handler, s->state, NULL);
+        pthread_mutex_lock(&domains);
+        clone->domain = s->domain;
+        if (clone->domain) clone->domain->refs++;
+        pthread_mutex_unlock(&domains);
+        rs->move[rs->nmove++] = runtime_handle_new(1, clone);
         return;
+    }
     default:
-        fprintf(stderr, "[totk-ipc] %s: control command %u (domains are not implemented)\n", s->name, rq->cmd);
+        fprintf(stderr, "[totk-ipc] %s: control command %u not implemented\n", s->name, rq->cmd);
         runtime_fail("IPC control command not implemented");
     }
 }
@@ -144,14 +210,37 @@ static void dispatch(IpcSession *s, uint32_t *m) {
     parse(m, &rq, &words, &ndata);
     if (getenv("TOTK_IPC_DUMP") && rq.na + rq.nb) { fprintf(stderr, "[totk-ipc] raw %s:", s->name); for (unsigned i = 0; i < 20; i++) fprintf(stderr, " %08x", m[i]); fputc('\n', stderr); }
     IpcResponse rs; memset(&rs, 0, sizeof rs);
+    IpcSession *target = s;
+    int domain_request = s->domain && (rq.type == T_REQUEST || rq.type == T_REQUEST_CTX);
     if (rq.type == T_CLOSE || rq.type == T_TIPC_CLOSE) return;
     int tipc = rq.type >= T_TIPC_BASE;
     const uint8_t *bytes = (const uint8_t *)words, *end = bytes + ndata * 4;
     if (tipc) { rq.cmd = rq.type - T_TIPC_BASE; rq.data = bytes; rq.data_size = (uint32_t)(end - bytes); }
     else if (rq.type == T_REQUEST || rq.type == T_REQUEST_CTX || rq.type == T_CONTROL || rq.type == T_CONTROL_CTX) {
         const uint8_t *payload = (const uint8_t *)m + (((bytes - (const uint8_t *)m) + 15) & ~15);
+        if (payload + 16 > end) runtime_fail("IPC truncated CMIF header");
+        if (domain_request) {
+            uint32_t dh[4]; memcpy(dh, payload, 16);
+            unsigned type = dh[0] & 0xff, inputs = (dh[0] >> 8) & 0xff, size = dh[0] >> 16;
+            unsigned id = dh[1];
+            pthread_mutex_lock(&domains);
+            IpcDomain *d = s->domain;
+            if (!id || id >= d->next || !d->objects[id]) runtime_fail("IPC invalid domain object");
+            target = d->objects[id];
+            rs.domain = 1;
+            if (type == 2) {
+                if (target->close) target->close(target->state);
+                free(target); d->objects[id] = NULL;
+                pthread_mutex_unlock(&domains);
+                respond(m, 0, &rs); return;
+            }
+            if (type != 1 || inputs) runtime_fail("IPC domain request type or input objects not implemented");
+            payload += 16;
+            if (size < 16 || payload + size > end) runtime_fail("IPC invalid domain payload size");
+            end = payload + size;
+        }
         uint32_t h[4]; memcpy(h, payload, 16);
-        if (h[0] != CMIF_IN_MAGIC) { fprintf(stderr, "[totk-ipc] %s: bad CMIF magic %#x (domain sessions are not implemented)\n", s->name, h[0]); runtime_fail("IPC bad CMIF header"); }
+        if (h[0] != CMIF_IN_MAGIC) { fprintf(stderr, "[totk-ipc] %s: bad CMIF magic %#x\n", s->name, h[0]); runtime_fail("IPC bad CMIF header"); }
         rq.cmd = h[2]; rq.data = payload + 16; rq.data_size = payload + 16 <= end ? (uint32_t)(end - payload - 16) : 0;
     } else {
         fprintf(stderr, "[totk-ipc] %s: message type %u at %p:", s->name, rq.type, (void *)m);
@@ -159,7 +248,8 @@ static void dispatch(IpcSession *s, uint32_t *m) {
         fputc('\n', stderr); runtime_fail("IPC message type not implemented");
     }
     if (rq.type == T_CONTROL || rq.type == T_CONTROL_CTX) control(s, &rq, &rs);
-    else s->handler(s, &rq, &rs);
+    else target->handler(target, &rq, &rs);
+    if (domain_request) pthread_mutex_unlock(&domains);
     respond(m, tipc, &rs);
 }
 

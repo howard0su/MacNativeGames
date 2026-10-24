@@ -20,17 +20,24 @@ typedef struct {
     uint32_t result;
     uint8_t data[0x100]; uint32_t data_size;
     uint32_t copy[8], move[8]; unsigned ncopy, nmove;
+    uint32_t objects[8]; unsigned nobjects; int domain;
     IpcBuffer xout[IPC_MAX_BUF]; unsigned nxout;  // out-pointer data placed by the service into client C buffers
 } IpcResponse;
 
 struct IpcSession;
 typedef void (*IpcHandler)(struct IpcSession *s, const IpcRequest *rq, IpcResponse *rs);
-typedef struct IpcSession { const char *name; IpcHandler handler; void *state; void (*close)(void *state); } IpcSession;
+struct IpcDomain;
+typedef struct IpcSession {
+    const char *name; IpcHandler handler; void *state; void (*close)(void *state);
+    struct IpcDomain *domain;
+} IpcSession;
 
 /* Service registry: open(state out) creates per-session state for a named service. */
 typedef void *(*IpcOpen)(void);
 void runtime_ipc_register(const char *name, IpcHandler handler, IpcOpen open, void (*close)(void *));
 uint32_t runtime_ipc_new_session(const char *name, IpcHandler handler, void *state, void (*close)(void *));
+void ipc_out_session(IpcSession *s, IpcResponse *rs, const char *name, IpcHandler handler,
+                     void *state, void (*close)(void *));
 int runtime_ipc_svc(unsigned num, uint64_t *regs);   /* returns 1 when handled */
 
 /* Response helpers */

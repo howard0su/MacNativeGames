@@ -355,6 +355,14 @@ moving try on the field route is void, because Link died before 245 s and the ru
 
 ## Not tested and known issues
 
+- The local `pctl`, `pctl:s`, `pctl:a` and `pctl:r` services now supply factory commands 0/1, initialization and stereo-vision permission queries
+  for a profile with no parental restrictions. Unknown commands still stop explicitly. This removes the missing
+  service failure reached by BOTW 1.6.0's Labo VR option; it does not implement Labo VR, its display mode or sensors.
+  Both BOTW builds link the service. `python3.14 -m unittest discover -s tests -p test_pctl.py` checks CMIF factory
+  handles, permission payloads and rejected requests without game data, including the SDK's CMIF domain
+  conversion, object IDs, cloned-handle lifetime and object close. Input domain objects and domain-copy control
+  commands remain unsupported and fail explicitly. The BOTW 1.6.0 pctl fix was player-tested successfully;
+  full Labo VR rendering remains unverified.
 - Sinking legs after a save loads: deferred, cause unknown (see "Long run and the sinking legs").
 - GPU allocation grows about 4 MB/min after warm-up (1916 MB after 27 minutes): deferred. At that rate, the 5 GB
   budget is about 13 hours away.

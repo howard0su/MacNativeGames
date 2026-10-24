@@ -342,11 +342,11 @@ static void manager_handler(IpcSession *s, const IpcRequest *rq, IpcResponse *rs
         need(pthread_create(&r->thread, NULL, render_thread, r) == 0, "render thread");
         fprintf(stderr, "[totk-audio] renderer open %d Hz x%d, voices %d effects %d submixes %d sinks %d splitters %d/%d REV%d\n", p.sample_rate, p.sample_count,
                 p.voice_count, p.effect_count, p.submix_count, p.sink_count, p.splitter_count, p.splitter_destination_count, revision_number(p.revision));
-        rs->move[rs->nmove++] = runtime_ipc_new_session("IAudioRenderer", renderer_handler, r, renderer_close);
+        ipc_out_session(s, rs, "IAudioRenderer", renderer_handler, r, renderer_close);
         return;
     }
     case 1: { uint64_t v = WORK_BUFFER_BYTES; IPC_OUT(rs, v); return; }
-    case 2: case 4: rs->move[rs->nmove++] = runtime_ipc_new_session("IAudioDevice", audio_device_handler, NULL, NULL); return;
+    case 2: case 4: ipc_out_session(s, rs, "IAudioDevice", audio_device_handler, NULL, NULL); return;
     default: ipc_unimplemented(s, rq);
     }
 }
