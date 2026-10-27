@@ -5187,14 +5187,18 @@ static NSMutableDictionary<NSString *, NvShader *> *g_shcache;
    this offline (c1_full.tsv from tools/c1_guard.py); TOTK never had that list, so every shader got its own 64 KiB of zeros
    (5,257 of them, 328 MB of GPU memory and as many residency-set objects after a long session), and an offline list would
    also miss the variants translated while playing. Decided from the MSL at load instead: shareable only if every
-   "<stage>_c1)._m0[<index>]" index is a plain integer naming a float4 inside the data rounded up to 256 bytes plus the 256
+   "<stage>_c1)._m0[<index>]" index (including SPIRV-Cross's reserved-identifier spelling) is a plain integer naming a float4 inside the data rounded up to 256 bytes plus the 256
    zero bytes that follow it in the bank (reads there give zero, as the exclusive buffer would). The translated MSL reads c1
    no other way (the cache, 7,546 variants: 5,248 have c1 data, 65 of them with a computed index). No source -> own 64 KiB. */
 static int c1_reads_bounded(NSString *src, size_t len) {
     if (!src) return 0;
     const size_t limit = (((len + 255u) & ~(size_t)255u) + 256u) / 16u;   /* float4s readable as own data or zeros */
-    for (const char *p = src.UTF8String; (p = strstr(p, "_c1)._m0[")); ) {
-        p += 9;
+    for (const char *p = src.UTF8String; (p = strstr(p, "_c1).")); ) {
+        p += 5;
+        const char *fixed = "_RESERVED_IDENTIFIER_FIXUP_m0[";
+        if (!strncmp(p, "_m0[", 4)) p += 4;
+        else if (!strncmp(p, fixed, strlen(fixed))) p += strlen(fixed);
+        else return 0;
         char *end; unsigned long idx = strtoul(p, &end, 10);
         if (end == p || *p < '0' || *p > '9') return 0;   /* a computed index */
         if (*end == 'u') end++;

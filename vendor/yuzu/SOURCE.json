@@ -1,0 +1,1464 @@
+{
+  "schema": 1,
+  "revision": "7533ff093d76e2807ccb87bbc6fd17dab2447cc6",
+  "files": {
+    "LICENSE.txt": {
+      "sha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809",
+      "head_blob": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "LICENSES/BSD-3-Clause.txt": {
+      "sha256": "e8d77bfbe966dee45a72a12ecb227834ff548cc7dba1bdc63fa8626f23b1707b",
+      "head_blob": "086d3992cb3a8f7000127bda96d6cbe673c8e788",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "LICENSES/GPL-2.0-or-later.txt": {
+      "sha256": "c61d71705fb0603807a75a9f0f0558d4f7f6dde1e778983b03073ca2d8643d81",
+      "head_blob": "17cb286430a4d8094e473d06bd7f50f40438ddba",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "LICENSES/GPL-3.0-or-later.txt": {
+      "sha256": "d4d318987adc3e0eb41e91c97c593002bf99b665a1bc226919a6e8a8707b3408",
+      "head_blob": "d41c0bd98feb776ef7d81efbc1b5447e0284a187",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/LICENSE.txt": {
+      "sha256": "29a8f5acbf5feb3a18bf70d704e9609131d5f505ae5fc0ebed8157a20a12e7f3",
+      "head_blob": "eff331d9e93eb6f023ae551444e0bbb3fcc5e89a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/LICENSE": {
+      "sha256": "dbb7f012478c842e49e14bc4060d1b25463ce34a9d4602e029493c8b6e97bbfb",
+      "head_blob": "47974f8ce39c18b2809be2131cdd6f8a699c5a5a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/AMD_gcn_shader.h": {
+      "sha256": "b5576eafbad7e055c1a7dc827c49cd1e0939ba661333346c5b9105924587e12a",
+      "head_blob": "80165ae5c0aebf3e3a8c754ca55e727abcfe316c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/AMD_shader_ballot.h": {
+      "sha256": "06179b493a9565a1a9d11220612ae4f36a4a3b6e1a9f008ca9db4fc02ee683d9",
+      "head_blob": "8a8bb6eced851e3dff5ff2d98e19b9502f9b8679",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/AMD_shader_explicit_vertex_parameter.h": {
+      "sha256": "3ac9bed483715a45cc0a1df5cc836870806e37709f4e93f5632086d218b10dd7",
+      "head_blob": "12b6480f13c9fb9c2ab302ff52c2f874d4653fe9",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/AMD_shader_trinary_minmax.h": {
+      "sha256": "0085df5dd9b07c9bad28a71b114019a7a9cb47f49ac4ad547cbcf3b1c5996559",
+      "head_blob": "1b14997d27b8a95ae50d5aca4672c1d540f39f02",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/DebugInfo.h": {
+      "sha256": "9ddea69e01d848915edb68460785ff03f1a9e53371636d067143b78ca05afee0",
+      "head_blob": "4657556bf00d82c18aa282e859b8f1462d513e59",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/GLSL.std.450.h": {
+      "sha256": "5ad2a15c40c8edbd9749d56bffa532fe5c64d984b8b21d4b845715514c28db7f",
+      "head_blob": "54cc00e9a88822aeee4e2f3ecec28de012955bb8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/NonSemanticClspvReflection.h": {
+      "sha256": "c52dc48074863f26761a870b7be8615ea6577b71832ff4688435cb3e101c1883",
+      "head_blob": "0cdf29d12970d295910263c550be0321c2afa18a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/NonSemanticDebugPrintf.h": {
+      "sha256": "002c81bbed0f7dd0577a4d419a2d3ad2300c0ff51a98926ebcb00c2faf704651",
+      "head_blob": "83796d75e56afc2f02409f81759678457cd70f71",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/NonSemanticShaderDebugInfo100.h": {
+      "sha256": "58c570485ccce06289846d925343c0996935157b5f02bcc4084b51dfdb8a9e3b",
+      "head_blob": "c52f32f80908b5b391808e62080f4c2b011de5d1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/OpenCL.std.h": {
+      "sha256": "8faacdf7d05937a23829503a12d70bbf157232e0af1ebe3d86eee4f4913f03ec",
+      "head_blob": "2745e30df3b6395aa1454e31053727ea0021cdbf",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/OpenCLDebugInfo100.h": {
+      "sha256": "0d88965291faa757c9ee72d4e42dc3f18c6ba3bae35a2a790ab7d7b234f9952e",
+      "head_blob": "e3847c902b6a73cbae3d70811a4b0f1d316f3ce7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/spirv.h": {
+      "sha256": "0d10c5a67f37bb9ac0ab41d60873e8bc7d5c954ec85bf06e9243fd7dc2d3ca89",
+      "head_blob": "22ca325d85f58d48c9cb900cfcf5254d33ede48d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/spirv.hpp": {
+      "sha256": "fa57eec8ccbea1e373553c8ecdc7e9f3b6390c2dd68fd09ab8e1964e921d49f2",
+      "head_blob": "576e10252a517ac51bcc8611fb4a733d5ef13ac3",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/externals/SPIRV-Headers/include/spirv/unified1/spirv.hpp11": {
+      "sha256": "bc05dcc3678bac68d705ace01bd1a8e3dc014bbd14af0909541f1fe216cf7078",
+      "head_blob": "a73ebe68463a2078f3d76acd284eb79a8795d025",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/include/sirit/sirit.h": {
+      "sha256": "fb5e1fc367d6f6b4c273f2082b0e0641c89b78bc1efb052548f0528860c158d1",
+      "head_blob": "dc3c5676efc615989c15abee14e6e9716bfb1fe7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/common_types.h": {
+      "sha256": "9dafa0fed5af3685ca5e89a40e5e8bd5d68669553538bcdc43c6fab386112a66",
+      "head_blob": "42df6f6c3ba8f46aa6035dfaeac82627d0c3f301",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/annotation.cpp": {
+      "sha256": "c0255d7e6bbe15d650f6b4df42a5f9c95a8e04629cbec5cb17217c48de765182",
+      "head_blob": "e3524bb83a1e5b5ecdfc077bf2d9bdb7adeae567",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/arithmetic.cpp": {
+      "sha256": "f5523f3d04458b7f8afb878206eb3c619d921a9aa4ee4e00ceed464bcccf0e3f",
+      "head_blob": "ab6217794fab558f86b16183a8295a508b4456ac",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/atomic.cpp": {
+      "sha256": "661b737a91cb94014a27a5a581d93be4c7c70abf8d342242ed7ec188da453dda",
+      "head_blob": "cee8849f5714b7f7381f752a000952b09e38c748",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/barrier.cpp": {
+      "sha256": "94154b013fffcb5a5b54274f8f71f03717e3b01755008203da412eeebe9962ff",
+      "head_blob": "646b5cfb4d87cb5e9fb27267f7682c6334dac8a7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/bit.cpp": {
+      "sha256": "4eec9b4ff0d2dbe7bca80769103d24fcbf0259b973e52e0eed7453782fcf3082",
+      "head_blob": "c860613fcf671009366f58c95b4edd8fb2cefcc2",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/constant.cpp": {
+      "sha256": "340d23477c253374f32f64a20dd53c4953264cf2a91b370666822135e5d18669",
+      "head_blob": "612049c4f8e54db3e95f43f49e8407158ab0b9ac",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/conversion.cpp": {
+      "sha256": "4c6f14e088ccc493a018cbe4174b879fd0c7ab49f014fb92a5c2dcecd4829df3",
+      "head_blob": "0b4e2c8a3f5703269bbca7c8bc5c5224af6baaec",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/debug.cpp": {
+      "sha256": "70f45d53f8f85511a9ad1eb30ff184666370361daab82daa249232a974b1fa27",
+      "head_blob": "1ca3462654f196d8759b689b81754251b703cdbe",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/derivatives.cpp": {
+      "sha256": "f6c52ecebc2a44bfeb1e4698e16fa7dae7aa9b4e1ef000e8a99823cdacb0aa1f",
+      "head_blob": "c944e2a52a7c41eb597a676944cae7c9084ae297",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/extension.cpp": {
+      "sha256": "11d0ed8b2b2f7a529623346520591914a1675238335a1365a5ebd75f904ced08",
+      "head_blob": "005c1891c6d6a9d31eba8bbe2cafa8fb416ae978",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/flow.cpp": {
+      "sha256": "bfbdf4462f7774689f563b21cfd693e7e9aeb9ba719d7eb522cd104eec893112",
+      "head_blob": "5f6b693d547eea3beb9de1ea720e684fe82c23aa",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/function.cpp": {
+      "sha256": "98b527f0bd8fbc9006868a8550be83304429b36218eccbf18a61825c96f3b035",
+      "head_blob": "f84cd7ff530a39d2f9bd2a9b10dc95adf6150445",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/group.cpp": {
+      "sha256": "53b40ea087147afdb32d222cdfd8a6469e97e0f0f47d7981854a54b5aeae7367",
+      "head_blob": "b8532847a16bc52fdd27a316b73f3b472930c18c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/image.cpp": {
+      "sha256": "3e1c3789c52a1bd4adbfe47db12aeb6ec3c83a91e8af452e5c9a904ebd2d3bd5",
+      "head_blob": "e68447f1e97199c58a1a59c875ce4457a8316155",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/logical.cpp": {
+      "sha256": "f7863227851f8cc1c5009d3deabdf32936f07dd4b97a3fca41e4b819153e769e",
+      "head_blob": "4d7292bf021bce2d078c71141553c67bf10a4647",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/memory.cpp": {
+      "sha256": "f5d37e5c679ca7e2d0c53982ce648f72399dbfa7b5ac79586438b2368294364e",
+      "head_blob": "68f0154bbae869d37195eaeeb907972501c16fff",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/misc.cpp": {
+      "sha256": "46760da826557d0e29c599888a05bc0f1e89abe7f12a3bcfec585c5bb7cc2ebf",
+      "head_blob": "6785346eb1fad1d70d8fcef6adc3566122f34b14",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/instructions/type.cpp": {
+      "sha256": "26e1a582e30561e365d50c63e5cf91e13331913914264cb66d688d31f207ea36",
+      "head_blob": "3509d1f47250bacf3fe52c9887111564bc6e1703",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/sirit.cpp": {
+      "sha256": "05965602635165d5af5307e9e170722eb706eee62afcbf59151eae179eb6a8f1",
+      "head_blob": "7075f23e15f505c624755587cf808383598702e8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/stream.cpp": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "head_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "matches_head": true,
+      "matches_head_lf": true
+    },
+    "externals/sirit/src/stream.h": {
+      "sha256": "f08cbedcc54424dfbc30148b1d810f7787f03b0f1a0d94d9dae2189432019271",
+      "head_blob": "bf9e48a3f4630808d0757f0a337dad5ecef9c9ca",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/alignment.h": {
+      "sha256": "2c0a93f13a106e4bbb242118ab5442dbd2f545e2c22f9f4f0f0f13c7c22ffeb5",
+      "head_blob": "54acc2980c689267d477a7b3ab379ad641f89e74",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/assert.h": {
+      "sha256": "3b15242fc5a2be538a56f4a60d6a4aa8bd2da157528086c7ff4ea29b5f2c5dc4",
+      "head_blob": "67e7e937510722b45c097eb71004819ce4250b71",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/bit_cast.h": {
+      "sha256": "0490286922c1f66c26beea5ed3ebad17f63a90a81f74ec3d309cc303647271a6",
+      "head_blob": "c6110c5426a762685fdb94f7e756461bb46b8684",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/bit_field.h": {
+      "sha256": "5fa45eb018a225475317e841e7d5633cc74d8b242e26431249a9b96b543091fb",
+      "head_blob": "0168ff9cbfdd7a20787fcbacee2269e5a78d4a9c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/common_funcs.h": {
+      "sha256": "260f5be57ee946a84649b5bbf25abf7c94ec7ff1c451edaeb10314e0f45acc64",
+      "head_blob": "ba3081efb40564a9e7df6a6cf7d80cae0d903439",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/common_types.h": {
+      "sha256": "1ac6e0392a122a1b33dd03f46a2ca206b353cfb14c9ad76dac40058cddc33b77",
+      "head_blob": "ae04c4d60535f7f878809166530a4ae5e6dec69e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/div_ceil.h": {
+      "sha256": "53263d338a9494301720f6529fdd62008a60dd31b4042aa5c070961e4334ac64",
+      "head_blob": "eebc279c278078fc281d2103906b90a5806d4102",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/logging/formatter.h": {
+      "sha256": "691dfb690065ea5cbcbce2d73315a3ed30463d70f137c88838578ff08da96693",
+      "head_blob": "16bddde8fe448165d62b5a781ae0cd026103d56b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/logging/log.h": {
+      "sha256": "ad69b4370fdae19df60bd98d8e557e03ea1d834e5e6d47daf90bd3855fa96ec2",
+      "head_blob": "79f710265aa495d8ac6ed2568c92af07fdba9d8e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/logging/types.h": {
+      "sha256": "fa0f339c3806aaf4757f1cca1cbbc86bcd23f98244ebe35dd083b240eca44453",
+      "head_blob": "08af50ee0ccaf7b331bf0f6815f44740d0971eb1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/polyfill_ranges.h": {
+      "sha256": "b00d24e1184a62555a383194c372a488e17bb9e64afb4f79a8afbd24de439387",
+      "head_blob": "ca44bfaef1fd88d02fa6b01d4e262b9df3ae84fe",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/common/swap.h": {
+      "sha256": "e9dc068b4cdbcd8cb7513f41b0257c3d6335fde28996343e7b7082ba9ff50c4c",
+      "head_blob": "fde343e452599fc79a78ea24f0ec1139958af7f8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/bindings.h": {
+      "sha256": "f8bbd0ea795485c623933723266caee190ef130ca93b474daf979f793d4067be",
+      "head_blob": "b2598fd5268a3d6531d99f58aa8ffacb56a8b186",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv.cpp": {
+      "sha256": "1ec49756b998b020678174774b9a1bfbc59b2a3d95b8da0bab3dbe39cf769783",
+      "head_blob": "3f9698d6bf1917780f3b861ee73b44bfae4b2410",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv.h": {
+      "sha256": "026c69274d5df23089ea0e5c767dd738076cb8a3b86dacc115940bc2c8828443",
+      "head_blob": "9378814840707cbdca0d960c7af472048b9397e2",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_atomic.cpp": {
+      "sha256": "765a04f4d804c6cf4a0e8587510991899d09960189887173a3b665a0c3091c83",
+      "head_blob": "0ce73f289b9aeee569401ab4d5d0724d077a3c90",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_barriers.cpp": {
+      "sha256": "45b91a44a27987e739ca6ab6139788cea435293a616995ce7ba0ad18907fe9f6",
+      "head_blob": "0b9a3664ffefb6404c29c56b451ba5fb3b10b438",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_bitwise_conversion.cpp": {
+      "sha256": "a1701e8dd6ed5a823a72b70e7022082ac2a5999b651c7f3446b086b30369a1af",
+      "head_blob": "c4ca28d11adeb8cf7801c7df93a1659445238ef4",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_composite.cpp": {
+      "sha256": "9768e022af4b87a63cf81e15bb232dc5ce99d7762814cde048bfcdec11ecf41f",
+      "head_blob": "e757e9aedccf7080dd4f8d288c505275b503a209",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_context_get_set.cpp": {
+      "sha256": "46d43baf6d1d2c29b8c16e8659d5b01da5a8ac590b7ed5a8d3aec5b6f2d1b01a",
+      "head_blob": "2e7643fe9a7bbe3c9485d15ef825ad3fab249113",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_control_flow.cpp": {
+      "sha256": "cd929a647a22748a0ccb5c1f71461fc399f3e7dc3028a875c0d74bba4a2f50b8",
+      "head_blob": "fb2c792c11d1bb05a8f88fbbea0fe25692672768",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_convert.cpp": {
+      "sha256": "95ecee70bb21f46ec190e066a11cabce1b4d1bd6d9a35dc1c5d7307e700fcd26",
+      "head_blob": "a88f1b7c4031b179864e396979de0f1f0803d602",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_floating_point.cpp": {
+      "sha256": "ef7e39bf3a939a4245f899f28c8ef8cc0900c2851fc7d2fb20c092026d15d7af",
+      "head_blob": "c740c96fb37816f3ef2182d56a347c093b8e2a66",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_image.cpp": {
+      "sha256": "29bea92b4048b3edbf6047031c1db6791f899823c05e2634876324a592fe59b7",
+      "head_blob": "1f6a3809f368c1ee8981812211d1abb600f15164",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_image_atomic.cpp": {
+      "sha256": "101cb2f3de3433fcd8ef443762143fdeb068f2ebaf91263d071551d098888b0d",
+      "head_blob": "dde0f6e9ca218e76655fbe24b058b506ff42283f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_instructions.h": {
+      "sha256": "f8bcc72437002e02c78e9c7c67b4489a9898e1ed65fe719242bcf082f384444b",
+      "head_blob": "5c01b101270e08b1de4798f8cd5efc45ce83fe9a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_integer.cpp": {
+      "sha256": "3b68491072679e6a1e8b1b438db0d223e2b7cbd348dbfc584745ef6de429f8bf",
+      "head_blob": "960bdea6f126e11e1c0016edf4dc7a18a4dc9196",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_logical.cpp": {
+      "sha256": "d45e58cb1745d2707c08d3982ddbed674a2ee195a063f88320cf7ab43a7d0d37",
+      "head_blob": "c38427c9335c7ad0c8257fe98535e0602addac62",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_memory.cpp": {
+      "sha256": "b0b50451939e4a5666780bcd02043ad6e2d5e0c778dbb1da0da7bf9aaff78b24",
+      "head_blob": "bdcbccfde9b899c6c17e8d76d198a2597a28c59a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_select.cpp": {
+      "sha256": "44c9c78f00e3601fe2c6704f9be76768b0604bba533ac94d4f04179e90d4d29d",
+      "head_blob": "68e5b1c8ee3b7911b823c7c72a3ce5e09976e72a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_shared_memory.cpp": {
+      "sha256": "4f80070a7f707feb71c24fc65a842f6b02d2dcb4cc39e1e1823d0fb6bbc61bc6",
+      "head_blob": "df05dad74a136f8077e283fdeb1ca4239fb26872",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_special.cpp": {
+      "sha256": "1d8033eee145fe193043a4b6178e737c54b93cef2cbd9962e4a121a5c86cc9a8",
+      "head_blob": "f60da758e6b4a4c53c6d116e128f713675894cd8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_undefined.cpp": {
+      "sha256": "c8a5c34f8b36e8fec7afa952081f091eeebf1765b4fd394aa52f17c98f4115ca",
+      "head_blob": "0649290b0ef520b22eacddd0b7287feab507aaaf",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/emit_spirv_warp.cpp": {
+      "sha256": "922b2d1d09fb738a816747c22b68d1c256aa3ef607632cc828b2a1c43fb8aa23",
+      "head_blob": "77ff8c573135878d5df03d279c5020bf71f3a015",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/spirv_emit_context.cpp": {
+      "sha256": "e69ec6eef54b0b07965847a96d99dbff5aef2566332a41cc115539e700b2dec8",
+      "head_blob": "a27f2f73ac944ecfeed6659c961a111379d2a208",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/backend/spirv/spirv_emit_context.h": {
+      "sha256": "2e9fbc2c7057f1f0448efc8f999a7002c9a55f11db65f8ffcab47e8e1752b6a9",
+      "head_blob": "40adcb6b6739f9f1816f1d7060573215b2b9ece3",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/environment.h": {
+      "sha256": "f2b702e3a9f90fe0dbd9f8adc9e24348d43369481910eb4e9a411b78b2f80fde",
+      "head_blob": "5dbbc7e61e16030f5850c92ff25a9bc89cd1757f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/exception.h": {
+      "sha256": "7a4db8f078df803da8e965c793cde61f1844a4cdaab3af24de8362e3fc2e1141",
+      "head_blob": "322fce657900d7b6f807d561aaa4f19054570386",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/abstract_syntax_list.h": {
+      "sha256": "70412f6019cfbdc60a928a90d4e3db48e0b152b4ab8a6f63c4526bbe60394d8d",
+      "head_blob": "7edf21e8aba5fe197b191f13ff2b0103989eab4b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/attribute.cpp": {
+      "sha256": "26f9af83f9d8e45005aff831d20d9e7ce53443e63e7878fb8be5abd337a2b6da",
+      "head_blob": "1bf9db93531e1ab3fa8bfade88e8e347d9dfd2d7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/attribute.h": {
+      "sha256": "4871f5ed8a2d1020fe894645a08a72ca754a186e50094a04218a2f43004bded0",
+      "head_blob": "407a1f4bc1c52151d37a4eddbdabf02bd4fb2c7a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/basic_block.cpp": {
+      "sha256": "5c7cf680df68a2dfd27545a996997390829ecde9f1ecbd091ef40db82093166f",
+      "head_blob": "14293770ed4479838ba80fc8487b4a8698b142ad",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/basic_block.h": {
+      "sha256": "fef41e9d0c9d41aaf67f395d659fbf714f8b3d9838bf5c84cf954be8169b7d81",
+      "head_blob": "c9d83661a47381dd383e7b63226f1988ca8537f1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/breadth_first_search.h": {
+      "sha256": "61cbc556d7bb981121149539588be57c060f2ef96968f10b1d25ef567f1f2141",
+      "head_blob": "ec5542554920826ea52b33fd4170c5a8e69648df",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/condition.cpp": {
+      "sha256": "b6801993efb906da55c249ebc25afdc8ace282d9e04bc17c9ac4359844fa1c2d",
+      "head_blob": "fb6b141d34b1f8a61b42d7083b1a568f90d6bd51",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/condition.h": {
+      "sha256": "74c7f401a9cbba6ead3727300a7a45c5789bb31e70b6f0241108b95ee8f341ec",
+      "head_blob": "0b77b6590b2007606078647c7c78aefd246f708b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/flow_test.cpp": {
+      "sha256": "6a83013eb1a90bd2eaadb60a2a77565eb39bdb739e9b51ea2e822cc98679445d",
+      "head_blob": "a859efddeb819329e170c7b574bea8ae411f6bf9",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/flow_test.h": {
+      "sha256": "b317c14f70f4366f8b26229261cd0c60d82859dc358713482e5a458277f5e121",
+      "head_blob": "f758d131274908d706520a298f6b5cd2db3418f1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/ir_emitter.cpp": {
+      "sha256": "c862aeeb5a1214bb7e72654624d696af164ad23c2d0bb8d6b68097b6b2d6c80e",
+      "head_blob": "49171c470c6cbdc20969ea5031bc8ec09543cecf",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/ir_emitter.h": {
+      "sha256": "67b2bc0966c639c54268977fef67fae16228c02d1e6d5b63ccee6e6c2d247b04",
+      "head_blob": "d29303b3406a0677dfdced241d7511c7c7bcbffc",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/microinstruction.cpp": {
+      "sha256": "1b9b4a9ef641ce57800b1eb7e2de042caade702741331dd815ab8a92c8564f8e",
+      "head_blob": "84417980bca92ac6d9ac767f7aecf7452c22c3d8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/modifiers.h": {
+      "sha256": "62685c1659478417f6459bd4f7435578b1324a8bd1c7c6d21e794513bddfcdff",
+      "head_blob": "c20c2401f7a753b4e51181c5e3620c7642154875",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/opcodes.cpp": {
+      "sha256": "1d58c22668d15846ae6502ab71a7a7ee485a30cc79c4ee5c5006f42fccab7377",
+      "head_blob": "9e4d9e65a8106c05ba3816f62b705186558b38f8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/opcodes.h": {
+      "sha256": "8dd19326a6e50a1d19cd5c7a665965ff33b2b94f127b2c22c1fadae97f0f6c58",
+      "head_blob": "85ff20d3e6f2a8c10d42d4c91731e8b0200e2585",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/opcodes.inc": {
+      "sha256": "0d601dd4c3c465d6ab3b8937fecc2c23982567c45bed8231f1d392459988ec5f",
+      "head_blob": "4447d67b04894267aa3b3d811761acc546abb556",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/patch.cpp": {
+      "sha256": "73da0c469888b41586dd32616f5cdad924c0a5adb0a29dc2b8438a0523c8c80e",
+      "head_blob": "b0707d85a97a3790b7b8509a8f72c101d537777a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/patch.h": {
+      "sha256": "6a7de7eac5c725dc7ce14a675ed264134851a63fb29afd408b7913b260938cc5",
+      "head_blob": "5077e56c2c7f4e2c4a0d87ae9f65f6438c95db14",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/post_order.cpp": {
+      "sha256": "318f9abb16783e596e90f714c1f6e626de8506ca98ed5be1e7d9a3a100a6e079",
+      "head_blob": "f526615fc44ccfdfefb72140a7f8162a9e665072",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/post_order.h": {
+      "sha256": "a880ec87e555458ab01148675b7392cfbe25bdb55faa0b5658d23c6a31a306a2",
+      "head_blob": "d93071b0753613ee4522287ba934bd691569bfb5",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/pred.h": {
+      "sha256": "4e5cada180bc167d06da4c78f63380a742b7dc5a8b3d2d799c4fd4e6595418dd",
+      "head_blob": "f3f92b063af1e6849513e73ddf03148749da913a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/program.cpp": {
+      "sha256": "fc4d469958094cf69bcbf1b8abd9573a42c26dc7cfc863a20acca15015f296ac",
+      "head_blob": "bda56ff461cd969d74ce03c707116f8b5533c29d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/program.h": {
+      "sha256": "1be7c41797704d7842b678d9a8249dff63b3c6b813f9613b14966c0a492e7cbf",
+      "head_blob": "6b4a05c598518a5b8a0203c124841d8db4404555",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/reg.h": {
+      "sha256": "f096e0dc4e6054417e2eebfbd396a027012633ae5448d77a63af1672963db7ef",
+      "head_blob": "610492759db664265168bff14151631ce745981d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/type.cpp": {
+      "sha256": "55d58d2d1a116085b97e43b388e08301fbb2e5b20274b0bcdd960ceebb459292",
+      "head_blob": "32657cb05b5fe3157f9c709583eb83b4247df4f7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/type.h": {
+      "sha256": "dca34dbfdf6da9585d9568cdde0e05778c499b173ea4227ce1b093d30436567c",
+      "head_blob": "17b520c6dd19b27a3fa853e762d8074a8e6d33d1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/value.cpp": {
+      "sha256": "a93548badaedeee84d9c05ae199c0033df54efa4cc59efa89d4126efbab54680",
+      "head_blob": "3461693283d6f84fda019a36f0304739a44a3667",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/ir/value.h": {
+      "sha256": "5576afc715c91309166166cf66803bfaddaf937f835989527dea2d277ce37d25",
+      "head_blob": "fb244a2cade126731a2cea3cb9d5d992ad9169b7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/control_flow.cpp": {
+      "sha256": "757f67b0ff44af8d79988fc8ed97b140b4f98015a0d5350e7104852eeed54626",
+      "head_blob": "dce414cb47861f33ee111bd7330bda7b945c49e5",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/control_flow.h": {
+      "sha256": "c9e687e4499e9af2e4fddeb9b9e52147b3280b1c3f32ee2b8684f2c73bbf5172",
+      "head_blob": "1ce45b3a50673fe8eaae95e81c3d172dc12ce4d1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/decode.cpp": {
+      "sha256": "a77644292479a252858bd54e4ce9b9c19e8e24909e3c84b08708b36b980a118d",
+      "head_blob": "774f65bc59df7ae8d475c1293da97a51a639809f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/decode.h": {
+      "sha256": "1a651047291a0132f5d3a8526b8581280fef2416c7260a89b4f6e856f3386e1c",
+      "head_blob": "fc2fc016a58d4a72e4269b6e4a9cc8c04cbaa4d3",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/indirect_branch_table_track.cpp": {
+      "sha256": "06a6e6f0a7912ee30ff6151aceeb78c3fd074b2863c69f738620c7e034641f9a",
+      "head_blob": "712aefaa0ecad1077279ef7647ec712052432940",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/indirect_branch_table_track.h": {
+      "sha256": "ba20e43f49a8d6dfd7b7fedde01551a0eea87d9529d8844d3aecdc6808e0b37c",
+      "head_blob": "9a3afd19c63e7132f4fbbc43aba2c1bdd5d3f36e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/instruction.h": {
+      "sha256": "e310294c4166f482aab0430d51ebe9e76298730e60f4c2fcf1ced328ebe09f1b",
+      "head_blob": "d86c8cd349208b3bf0a335ffcb1b8d31f3a27048",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/location.h": {
+      "sha256": "a1ebb2508d997e64a48ecd85b621324ffb09e77322f1c03f4be8d40a95360f43",
+      "head_blob": "0dd16723a2ad98af7d818fd7b5a783c871407ade",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/maxwell.inc": {
+      "sha256": "36071c3a1267a5a392bdcf76fd2b883b803ae610e7ee0f09d423795460e6bb97",
+      "head_blob": "495b3e9f1c9ac3bccc7345188f0b341b44f67e78",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/opcodes.cpp": {
+      "sha256": "6258557f831e08b000391ff519b190747cd3509f2f96f7255c1d390c5ac33078",
+      "head_blob": "2d5c4d79e6fae20cc17bbf6b14ed047691feb567",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/opcodes.h": {
+      "sha256": "571b3df7411a0233bbc24d601e484dfbb61a46c566d9ad730970a2f553c39178",
+      "head_blob": "b3a493ff6a8af53440299f1d727b237b9623211b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp": {
+      "sha256": "7dda9ab0780ac3c1f3b123c10bf71758e02ac4546bf17233e7be8f082820149f",
+      "head_blob": "a12ab138a221607b49af1775405ffa1bc3ea261c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/structured_control_flow.h": {
+      "sha256": "b672d27c4a307dab0130c9c6964b5f0a7a98ceefff7f6b34ab8fe5e71c36e56d",
+      "head_blob": "15c1185edeed15aaf2836459ab572e83c64a9af9",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/atomic_operations_global_memory.cpp": {
+      "sha256": "2e1e3e29387b4d3293f8ee8373908ea99ad8b884595b1ea442bc3135881bef16",
+      "head_blob": "a6be7c97eb297e5df97f7edb4ab11e77cd0f6938",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/atomic_operations_shared_memory.cpp": {
+      "sha256": "b2500cf1714cfcf1528ab010fc339e879dd65e52cd1c52b7b976bab77abbbbb9",
+      "head_blob": "5ce911247806b037e74bf5aded88fa8ca4505920",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/attribute_memory_to_physical.cpp": {
+      "sha256": "ee2a732e2c38c46ab02705807ac7ece1d6864f13f008266605816c5798aadbcb",
+      "head_blob": "f6ff160c9bf64dc61b66ef6d39480afb1846615e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/barrier_operations.cpp": {
+      "sha256": "bf0154d948ba174733fb37bc91253b93b939a8e0ef07a5c5f7b684635cab60d6",
+      "head_blob": "fb5368c7bba75cf6845ab47709282e202a713459",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/bitfield_extract.cpp": {
+      "sha256": "fb35162d3cba15e4bdf9ea3152d10e43d62a0a46e9b45398c997751a6bb5498d",
+      "head_blob": "8d8a90c9b928c872635a4412f92b86f096a3519f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/bitfield_insert.cpp": {
+      "sha256": "916cf6de07e5d24d288329db57c567dbb0c17379143b1951deee577adb21fedc",
+      "head_blob": "e03ccc1ad99109e3fa46e07bf91e9ab4975c9d1e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/branch_indirect.cpp": {
+      "sha256": "9eb30f796743b5862734782981cfb1ebf8f701ba714eee37269ed0c68969069d",
+      "head_blob": "50aa16049183ff24232358c9116531934b91ad17",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/common_encoding.h": {
+      "sha256": "ba4efc5204a9da85f8996cdf868335c47470f2fec2f6221fc5d2c3365f2826f0",
+      "head_blob": "b43bb01b8b58b284626a6b6b4d6b9b7efb995fb7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/common_funcs.cpp": {
+      "sha256": "95c328791c6714d1754446955eacba4c544ef45b228593de251e5e3dc19c255d",
+      "head_blob": "3fd2c616db506fab3f4a3d54d3361474efb81bc8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/common_funcs.h": {
+      "sha256": "83995ff84a8a4c4060af7b87575e1dbea3be5f601763fb0d81345898fd67d2ad",
+      "head_blob": "25b7e12e6f4f863e74a1029965020dd5a96d3113",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/condition_code_set.cpp": {
+      "sha256": "e440d343e3c711c4831b454a167acc9b2c7f68290c87f6056ecfc05d5c86f8a1",
+      "head_blob": "4bf151499eed3efbd7847df194be132b279879ec",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/double_add.cpp": {
+      "sha256": "e69eb850c744de46be183fca51cae4f735a4ad6ae3cef030e145c22fbb8d4ea2",
+      "head_blob": "b24ac80e0182c589b7879da7219fb0e765c07e13",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/double_compare_and_set.cpp": {
+      "sha256": "4ec629a2aaf1159a6556947e7dd6133586543f2ac057a5f46c3b4268154e8c12",
+      "head_blob": "6f040c45c82b617f62bbe8ba1d4458ac75f4beae",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/double_fused_multiply_add.cpp": {
+      "sha256": "587d90c43ff5e6bc287b7bfc39339351cb8ea79408df9324b554223970109fc5",
+      "head_blob": "b43a3a2e6548014385c3462ce75505845195303d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/double_min_max.cpp": {
+      "sha256": "025d6199d18238f7a9780331473989e77a2c414742e6d0f7c2b6dafd992e90ad",
+      "head_blob": "59a138eef09696c5fa55b6ec4347b5713e2b1915",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/double_multiply.cpp": {
+      "sha256": "2d6838b299e9ffdc44dcbe734d715a056f77c0c2624eac5c140c276afb4f7829",
+      "head_blob": "a3dcdb6d7f8669217241d91c6a27bbdec18a9073",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/double_set_predicate.cpp": {
+      "sha256": "1540d715a21d97b1f3c77c47e4185ab0f012e1df68183ae4b598559d23579097",
+      "head_blob": "24859f5b8254b53f353ae848052c7e777216e7f8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/exit_program.cpp": {
+      "sha256": "04167383038e14cd771a32a41b8b4a945ff4716776da79f045eaee3c49159929",
+      "head_blob": "c1179d9aa52f0efd006182eb12b7b9ba584f383f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/find_leading_one.cpp": {
+      "sha256": "7a243132f89ee4ef990390e70f80a66738f5df2e162ca02883a3c737f645379f",
+      "head_blob": "a920bfcb2b8a01fb9ea90ac450b9eb9d2b963df0",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_add.cpp": {
+      "sha256": "ac4e1affbc34a9b40ca9cb1d80324e9a0b15e201bb9b485cbadc03871a80b826",
+      "head_blob": "7350b6a8204d133c51d0f72bf01c3efa246414a3",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_compare.cpp": {
+      "sha256": "ee26995eed06a9bf8edc2368fb20f644a727749e44450956bb4cac048ca75e0a",
+      "head_blob": "b26a687669b934535e8a245e69ea6f5b4851c95f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_compare_and_set.cpp": {
+      "sha256": "40c1e523f987de230405b993ee13159703196f08347b665f6923a971bdb1ae72",
+      "head_blob": "8f253ff6e20d86f827b46cb7771772af2f8f0d07",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_conversion_floating_point.cpp": {
+      "sha256": "2f259bdc7186e07807994c300c853a7212beb022758fbc11ebc0db2a77ee55bd",
+      "head_blob": "7f3dccc526b623bfb4859a9493af9f19d6668b9e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_conversion_integer.cpp": {
+      "sha256": "48cf427dfce3925a10389a9a164bea4bc247a245f3536e8406db60b6e8fcb0d9",
+      "head_blob": "85c18d9422054d6c76d326c279c83b37ead6aacb",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_fused_multiply_add.cpp": {
+      "sha256": "6ce383e45eae502567cb7b73ad313307f8e08efb7ca28b2f107b0d46b66f4792",
+      "head_blob": "fb9f40b82d033c506352e7790fc83ea46e88341c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_min_max.cpp": {
+      "sha256": "ff2e17e3cd0481d7c90f79adb13e1ea713cb54392674f8f58d8397b5aff4aa57",
+      "head_blob": "125ade76950dd6534b16c1b170cf5f1fad92577d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_multi_function.cpp": {
+      "sha256": "71de43e90c1e13f9d8dd08ddd30a2a9e3c5830d6bc69d8423160641ef6906c7e",
+      "head_blob": "64b213ebf5f672127335979f24c92cd01c572a41",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_multiply.cpp": {
+      "sha256": "9a2bdaf49107d7d7a1d0fb720324cd573f877e9be9c6db70a84b1a776f0004de",
+      "head_blob": "fc8c7174bbbbeb3d417df5866b4099aacb36101c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_range_reduction.cpp": {
+      "sha256": "9a7e64ced2b01f9147a156b74bce056a7f5e7455ff9556fe7738d98e17dd94e8",
+      "head_blob": "96e3e68e07c63abb6ad2e8b2765cfb99dfb354d1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_set_predicate.cpp": {
+      "sha256": "3f6fcee96457954c449830aaa0c853a9301690423ec6cf99e320cfc6d4bfa781",
+      "head_blob": "cbdaafc7bec5eb13f28014cfc90b30b64b65c5af",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/floating_point_swizzled_add.cpp": {
+      "sha256": "2a9d1b0e6c7694f82ce45e509bc42d83ad3cd867a40876b03b72daa81fa0418b",
+      "head_blob": "f00e20023d0df369924c6eb2550986e3211a87d4",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_add.cpp": {
+      "sha256": "e8fa688bd41d05bd0de4453c1452647834fd72cf60386e4618bf7f5bd2f861b9",
+      "head_blob": "3e810b67fc4c80361d4ee471ce0611ee7bd636a3",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_fused_multiply_add.cpp": {
+      "sha256": "46443355cfbd4da8a55f84d90b45b968aa8e5cdbb06b4a16641f238aa13fbb72",
+      "head_blob": "a75a2d84bd72559c5feadaa08b37748ec29d9b75",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_helper.cpp": {
+      "sha256": "9e1a97bf3bf580d3ccc5805e81430693c88918f4ed2bd03aa408a5e3482e3424",
+      "head_blob": "014217ece1f9808246111b03f97ac7616e07b16b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_helper.h": {
+      "sha256": "7af048ce86a2c3ce437119c3f6fbd08f667d9837aea194cf08c77f4effcfb63e",
+      "head_blob": "3283b85bdc4d26b6c40e9bacafabf2e7ce6908a6",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_multiply.cpp": {
+      "sha256": "7089ec460e4f3745aef8425541d56a1e4ba7e7add204bc50efcbb198b7739c53",
+      "head_blob": "c83b5649aac89966e7e35a6f9b8fd2d23e72ed66",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_set.cpp": {
+      "sha256": "1be5b4fdb2caeccad0bfe4f6de43b4f1e18cae9335694b3bc0b505a84edcd409",
+      "head_blob": "c3080da25826c66133bc855e82ec25ba610dccfc",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/half_floating_point_set_predicate.cpp": {
+      "sha256": "c39078ccaee0404bbe302cb85ed156586df843dfcfb1094b4334e3b50873dddc",
+      "head_blob": "a08979e8d62b00e6a0524ec44a404178f0ef0570",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/impl.cpp": {
+      "sha256": "ab80fd3e4e741c297358ff38c6d830c7ce0b86a6f96b23a597075618f5a7cd2b",
+      "head_blob": "b0ebc75f7d7abfeee100183e115a601fea02f786",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/impl.h": {
+      "sha256": "ba7bfd0cdc6606847239d0863e2394c438513f97b99f31c57021ca5a1f4b13c8",
+      "head_blob": "adf7cad06813e81442ec147ee5a1e4c1b8c68ef1",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_add.cpp": {
+      "sha256": "90fd4924ad922bbeaba967818804593054d1da34b015fc14fe295a7ff5390eb6",
+      "head_blob": "49f70451a6d17fd92443b7f162a2bcdbc4129d08",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_add_three_input.cpp": {
+      "sha256": "53d053b82057fc6dc1d98ccc0fba3f59d072859a2dbff88b7c2bc14c10969356",
+      "head_blob": "3d9877359b106a7357eb137a5055f458b75615d7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_compare.cpp": {
+      "sha256": "d101bcb512fc3f4856bd605b60a6184df794f02fae98be835abd4de772da3062",
+      "head_blob": "ac1b405c57a8f444bc32fbf723bbcd8e3af4e4ff",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_compare_and_set.cpp": {
+      "sha256": "496d1110b46ebe1da8adb2d2c59f2141600a1b5ed8e7442b8add0807ce4236c5",
+      "head_blob": "a708f8b9142f99e1a51c7887de22b5496c418efc",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_floating_point_conversion.cpp": {
+      "sha256": "93659d912ac1df55f4e4e0fba49fefdac331b5cb7755d6ef73c6ef6941648542",
+      "head_blob": "a2dc0f4a6e682a4581f7fdf6a0cca775689117eb",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_funnel_shift.cpp": {
+      "sha256": "59af4af4d1db246ecf89ed3b0d769420f1207a34efd74119c1d0bd984bfd73c3",
+      "head_blob": "c2a0ee6f1c3e391563eafc8809cdee39fc7b798f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_minimum_maximum.cpp": {
+      "sha256": "a22fe7ac48ff05ac00bef1b21261d30dbb57077a931474385a0133f8b5fa2552",
+      "head_blob": "c3f6b0b7d572c91b177122b2678c4cc7a9896669",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_popcount.cpp": {
+      "sha256": "d9a9138357842952b1bc890f5f68c8e27c02947b8596476988ee479375bae7e9",
+      "head_blob": "2a535f38790556d9492021252d32c26cea20d073",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_scaled_add.cpp": {
+      "sha256": "9ab94d27bdc42e149b0ec7a036bac620f62326a2ddbd5d4b3b3b18bab80b89bf",
+      "head_blob": "4a3f0772f2797948b90a373e3497ccab94f8f6cf",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_set_predicate.cpp": {
+      "sha256": "298a50278fae6b63851b0262aeb542211b24d056ba4f031fa387c596d4e95037",
+      "head_blob": "c5d5221a0a3531811333f493478d33c5ee96ff92",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_shift_left.cpp": {
+      "sha256": "425a087e786eef1a7bf5a295c8c33111171aa60bdf5a284da1e8d7ec39ebab2e",
+      "head_blob": "5779cfbdd27caca49faeade741b01423acdf9102",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_shift_right.cpp": {
+      "sha256": "3ca1f856b08b8599f0e648e9d9f2151ba2df243c7caf4b106f2ac990857c6adb",
+      "head_blob": "2dccd2ca6da4816876d383cc7ae22acf398d478c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_short_multiply_add.cpp": {
+      "sha256": "866f094f8dd9762215c18a4864e3f7935403f1d6cbafca732b5c2fbdbce9bcf1",
+      "head_blob": "a96f8707e0e50c1980d4cce655c62a8be81d9f3d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/integer_to_integer_conversion.cpp": {
+      "sha256": "c5a67a89e178fcaa36902283de8ae2197e7908e7feb98a040ca3ff6afa69ba93",
+      "head_blob": "7484621d08e671d69b761a8e33648212f8d3e22e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/internal_stage_buffer_entry_read.cpp": {
+      "sha256": "946674022bfa88bbbd5fb99e3219d18f70b4c5399a5188595a50d90afb44fbcf",
+      "head_blob": "7025f14a2fbaee95eac5060cea23ae3fc4947659",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/load_constant.cpp": {
+      "sha256": "b41cd1de336eee78f2ce7c5e364f97d2456628ef6a773c570007370b80925796",
+      "head_blob": "7e12c089b4718807df5bfa101eb8277f9357ce6d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/load_constant.h": {
+      "sha256": "8a8bb7a3fe8ac12350d0b591d80e70c01a2b8b670097145a425eb90645a970fe",
+      "head_blob": "0df13b7c878ff6859ed717441493752bec7da99e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/load_effective_address.cpp": {
+      "sha256": "dc0578b4203834ecd80bbda97b30032784720926a28333d6130f879a255ee792",
+      "head_blob": "8361c8ab1b2a870fbd8746c12e5d8f6d52e80aaf",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/load_store_attribute.cpp": {
+      "sha256": "9e4df61530ec74a0295c850b567c715337d2b785df94100aeb885407653e272c",
+      "head_blob": "e3745ce084d74fcf7b0bf3bc066f3b4ef30012ce",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/load_store_local_shared.cpp": {
+      "sha256": "c7bd5ac6b10cda9dae204b08e740565c3443d4891559948eca2a92b69fdd0da5",
+      "head_blob": "a198b2b76010a29c5822492f1bf77d767ede48e3",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/load_store_memory.cpp": {
+      "sha256": "a87cd8e2c7e63ccbaa38bd77f9e7a07c55822951e1ae99a07fc789d4c0a306e6",
+      "head_blob": "8f2cf897d4ac34176398370b8ae69d1e57e1ed1f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/logic_operation.cpp": {
+      "sha256": "ec87657df2abe588217441b3903ac982c28fb36d5a1ad6deea9171008a904b77",
+      "head_blob": "4e0ff897c25674f4bf25367cfefca881438d20d0",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/logic_operation_three_input.cpp": {
+      "sha256": "0abd9fa16af43b3e8edc81d0adc7f0e93658aeb01a96463a8a927147142ab165",
+      "head_blob": "a4ec25844f3355a0cbcd658b608b0ebfe8a9401c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/move_predicate_to_register.cpp": {
+      "sha256": "9888dcd2d8af842d183aa6b4a6024781e0a18187509ad5d43af2aaf2ccbeada5",
+      "head_blob": "37586a65d5f3f3767a1af8b6b3145dfec8f8ec3e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/move_register.cpp": {
+      "sha256": "4c1355de79375789c932a4f6ed630800358d5cd99f47075ac64fa59d09b87355",
+      "head_blob": "1ddfeab06bc08e3a90916694133fa7ed96b0cfce",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/move_register_to_predicate.cpp": {
+      "sha256": "ab9c92e8e3979e84380316439a4f76b8ebb523b6460e13935d99f534ee09b3ed",
+      "head_blob": "2369e4cf6331ca33385cb10b787d1bf8436d2553",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/move_special_register.cpp": {
+      "sha256": "0d11d607b96c3493fe54ba69994349556188f79ffce3102f7d40d9ad138b53af",
+      "head_blob": "e593132e61d264cf8a36bc12aef2c98404d24b83",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/not_implemented.cpp": {
+      "sha256": "02da3205eab967c63f3cbb1f23d1d030e4daca0440062236f368aee2617e81a6",
+      "head_blob": "6203003b356060a100b9687fc7d0ab88d4b73eaa",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/output_geometry.cpp": {
+      "sha256": "6deac90214470ed5f2ceeeda60bb5c45642172b29013c8e452ba4813324e1078",
+      "head_blob": "b4b7925c94ed38133f90cb9dda04488482545853",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/pixel_load.cpp": {
+      "sha256": "b34db3cc420a4576d1806a46f2e8bf6794db5c83af6513f0da8e890181db2c97",
+      "head_blob": "78b436b8ba1ca589749cf6cf3abc826c411591ad",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/predicate_set_predicate.cpp": {
+      "sha256": "4c32616eace2cc4a4b69dabcf4d00132dda3e0d80a39888f65e4d1ab11ffb816",
+      "head_blob": "3b7d5395362b902619d7cd658f9466501dfa35ae",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/predicate_set_register.cpp": {
+      "sha256": "752b0b874d53edabf9d663d17d4c7fa46a80a7e4a2f095c43f95684430e3c138",
+      "head_blob": "cd1179c7d105b689b5ed68d1c195659e4dcebfe8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/select_source_with_predicate.cpp": {
+      "sha256": "0365e6017f6d0b8d08240de3d54dfd17f3f817e7827a1d66fbce2718e8b0ee87",
+      "head_blob": "992d6d1afd98f95fe0c670d51fe3e1146b5d5f54",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/surface_atomic_operations.cpp": {
+      "sha256": "e9312ee59205b47bf361f483bf4e42ce6e25e0c41bdaa3b8cd4ee333ed56da35",
+      "head_blob": "8ec90f52ede7cc186ff58a98c39853b2b681fd15",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/surface_load_store.cpp": {
+      "sha256": "e0266e9513db437b456f1a0ce3f657db9e59db00b75e58536e342c3e0272456a",
+      "head_blob": "c01ab361b708d7aaeaa98205bfc6afeed3a3f91c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_fetch.cpp": {
+      "sha256": "a8fdf6ce230641a99af02fe3ca036f27578c106920b15845b32569a331672d23",
+      "head_blob": "7a9b7fff8b30f3558b14b2873d7d4cf12e90ac42",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_fetch_swizzled.cpp": {
+      "sha256": "3a31478ea8fc7b125547889180a18eb86bf8092e988b0feca55b067a59d1f764",
+      "head_blob": "50e618c2f1ab4600222de79b1ddddab08885e78c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_gather.cpp": {
+      "sha256": "bfc2af29a28cc769c24c5e26a9cf4ae1c461047c4e2eabf648cd3a005c3d5513",
+      "head_blob": "3263b3c7c9da60d1137d60230ed20d87f950c84f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_gather_swizzled.cpp": {
+      "sha256": "5552009bdf529e28c84328eeb2830a5214d5424d890a0df9ab3aa20997af6c88",
+      "head_blob": "e4c6581450cdcee30d8c75dc4bbc6ddc947fa9e9",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_gradient.cpp": {
+      "sha256": "a538ed48cfa824007e712a7e92adbec88d08141dbc414e61d90915e95200f82a",
+      "head_blob": "4ce3dd0cd0a28be24af6034b5a7c9b50924d62c6",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_load.cpp": {
+      "sha256": "9544309c00462e57f2fe68198d764a9a6506986230cceb5603cd656b90372673",
+      "head_blob": "0a7821e18809e63f1109ea870a3fbe82e437d7b4",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_load_swizzled.cpp": {
+      "sha256": "9f8e85196cab9f93e99436c895c5386e106bba4e1b03e0e3ae8e801e9b08841e",
+      "head_blob": "0362f076afa96151059189b4cfff3f4e1b3b6a61",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_mipmap_level.cpp": {
+      "sha256": "b4ae759cb585e149a8e0a06cac91aee241ed129c611eb684ac3a2654d3bc504f",
+      "head_blob": "eeb49444f2fcce7bb2cf523ac78fe5b6de784a69",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/texture_query.cpp": {
+      "sha256": "f6467198c9a961e8572c812fe10de8594c69aaa990a3e99395a9e4a7da67eb8e",
+      "head_blob": "39af62559692b4c4ebcb9523428dd898539886de",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/video_helper.cpp": {
+      "sha256": "cf709a4631d47dc8e2fb476809c189f71a76fe26640e2dea2546e5c2084b98b0",
+      "head_blob": "7d7444aff0d11b7cb94bf18a1a13df26aa27ffd0",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/video_helper.h": {
+      "sha256": "cab0f3f704a4fcdb3d28a01f76ac8f3911aeb06eeed3aaf68734eb8179ca6df6",
+      "head_blob": "cbf253b6f842b4038b20087ecd68c15a21ce1a44",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/video_minimum_maximum.cpp": {
+      "sha256": "a79da5e6a5629ee0555ac082567276fb99e10f07fea216cd84292dc9f0726aee",
+      "head_blob": "5ac25beee8525af00738bfab5cc917fdc2900f5a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/video_multiply_add.cpp": {
+      "sha256": "47bf679b40d76754f508a9665ca43532bdc9ca0bc61b583d61bfc05b350513e1",
+      "head_blob": "9272a6d03703dd1db6623bc30bf6fd19b9ad6228",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/video_set_predicate.cpp": {
+      "sha256": "dee1912d61354913d0940a9bc5c0cf8118469bb252e73ba5ffa7ec6c8217f7f2",
+      "head_blob": "73db353042608f5bd48ec9fbbd1d494418672ad6",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/vote.cpp": {
+      "sha256": "e3603f04d0068ea9e89c934bc5fa73b66f32d69ef40004d2dafa8a488c336537",
+      "head_blob": "70e490e80800a00d994de31039faef4be4a0b841",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/impl/warp_shuffle.cpp": {
+      "sha256": "b071be8cab626152d7a51550b053f263e74e876ff5442844abf5c0e3f6d440e0",
+      "head_blob": "f0436994b2131c9a1f0f30498486a84264d91ecd",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/translate.cpp": {
+      "sha256": "2b84bc95f0a095e962bd27fb81540c9ad2287089a5e177053a5380b0bf735d52",
+      "head_blob": "6d684482698dc6f3d6b0d92297e6c1d0e4128e09",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate/translate.h": {
+      "sha256": "e28755c9e1ca8ccbf74553eca5b35438404ac93d6dfadd7ba0b5e6cbac1a48ef",
+      "head_blob": "2f98f0ec17a4d8f568aaeed66cfd4d97c121fb53",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate_program.cpp": {
+      "sha256": "150d8c295ec8cdf86f573aaa3f9cc78566bb234db4f46fd8f980f508449d60df",
+      "head_blob": "321ea625bcda4d1315a00e29b046c2b602b7b9dc",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/frontend/maxwell/translate_program.h": {
+      "sha256": "5a75da270500b2782797af82b405031743a4ada0cbc4cd5a200607bcabecafa1",
+      "head_blob": "497afe7cb97c4317156b62670f8beb9a6574d035",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/host_translate_info.h": {
+      "sha256": "aad45e9722b895311318cacf8bf6a06362933d0d0f7ac5e7136a2b18f4710804",
+      "head_blob": "1b53404fcc3039ebe35f5f393e9737c4dc82f817",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/collect_shader_info_pass.cpp": {
+      "sha256": "f4a40dc8e9094e4bac96c1a59767775e805bd86306c1098ac553c8e314fbace2",
+      "head_blob": "cb82a326c10f6554862d20372f1a282f07ca6db8",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/conditional_barrier_pass.cpp": {
+      "sha256": "3fc971e5b67f771fb430c8a02abfb204d3c1eafe591461e6676e7d9f908a900a",
+      "head_blob": "c3ed27f4f22469a2dba013d89a8665fb5ec852f2",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/constant_propagation_pass.cpp": {
+      "sha256": "8f4c1223978c8b03d1d2570b64d1f99211fb68619ea64ba499679710df8416dc",
+      "head_blob": "12d7b2d7fa848ea6603a8206950025572475cfcd",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/dead_code_elimination_pass.cpp": {
+      "sha256": "e65e34a8ef0260c5e1c21f31c9cc2a1107daeea1aab6aad552ed362a5c6cafb5",
+      "head_blob": "1bd8afd6f6b0d6a9c3a55b9dceba706636377e2b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/dual_vertex_pass.cpp": {
+      "sha256": "dc4fdcf9ce23416554d2666242ff375d50b7b16b0f833e9f9b1683dddef977c8",
+      "head_blob": "900f6f9fdb99200d5689b5df5a31a29a42b2674a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/global_memory_to_storage_buffer_pass.cpp": {
+      "sha256": "302c9b432f6abcb892fdefa7c8d9127d22b02368f526be7ddd16c6c8ca116529",
+      "head_blob": "0cea79945566349cd2429f8868836a2821c4ce2e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/identity_removal_pass.cpp": {
+      "sha256": "e8f9d64b8bf70c606051ccf77ed0dae5807b3082c18620190d3860835bf7e29c",
+      "head_blob": "951534bbf2e0a15870ab3059e508a77057e0b8c9",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/layer_pass.cpp": {
+      "sha256": "f2e616b57a1a1d8e661f0064b073c0625224efb071238059c06789f5198636dd",
+      "head_blob": "4574f7cf267c04fbd55eff83491cde3a6763b97b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/lower_fp16_to_fp32.cpp": {
+      "sha256": "0d433ffd82e60a4c6ed1eaef8a0c98b70b2196c93d889a82c30469b8468d429e",
+      "head_blob": "71e12b3e4d620495a149987f49331438d1ecc7a7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/lower_fp64_to_fp32.cpp": {
+      "sha256": "45fcefb2753446912402d5db7de5368a8ef8a55c290279ff5c1338d1a58b9f2f",
+      "head_blob": "5db7a38addbf5bf5d9279a107411141505461a49",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/lower_int64_to_int32.cpp": {
+      "sha256": "409e2a99ad8d35bd48b05f21bb3a27d9985975dfc6d8fb992717773d51c4fb38",
+      "head_blob": "cdb58f46b320b354eacaa3deb694353f5707180c",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/passes.h": {
+      "sha256": "71cebb390fdb0ea5cbe1dc0c34d2b5e33b0444f56e63cd9b63a10c1be442418c",
+      "head_blob": "1e637cb23c8d052a94d4b3d818b7743fba093609",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/position_pass.cpp": {
+      "sha256": "4f69c3cf595bb62e83a0d7cd5243fcd9623dc562c7d399a382d0053312beb950",
+      "head_blob": "3c20b71897299b8763d390144a2e726b20a2e91e",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/ssa_rewrite_pass.cpp": {
+      "sha256": "597696d3dfc2da7d1d4c5cfb306e04513a54f571fc0877c7942993ddd7693a67",
+      "head_blob": "07cabca43e69552c412e830f52caee363ebf62ab",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/texture_pass.cpp": {
+      "sha256": "27f76241042553307d29c5684e5ea3d36dbbb7e1a6eafaad0a6637065a5e1438",
+      "head_blob": "8053fe9e9421e35f3f679b9ffb0962ca2e10ae49",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/vendor_workaround_pass.cpp": {
+      "sha256": "c8e1cf891635150f09b530ee5919637a2812d94a2d0eb3c6115d297c6e9a5ace",
+      "head_blob": "08c658cb811e24e0a14181fe547ba94801c6a0b6",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/ir_opt/verification_pass.cpp": {
+      "sha256": "47bb5181fbc86fbe3fa106ab71e480537f504dce5e9c22ac9af33bc7ffa56de4",
+      "head_blob": "f89f4ac28f03b78aa5d80411069ca5afb407af4a",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/object_pool.h": {
+      "sha256": "fe7504f4ee191e91557ae68749596b2b4228d2fee66a6eedec3d493a2c3d0761",
+      "head_blob": "2b42c4ba2a8c9aa8c0bbeb73304064fe9e6115df",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/profile.h": {
+      "sha256": "fd57a7c0bf997345c8a0bdbf4c7a55d3e55414c9a75045c1fcd6135384bae7ca",
+      "head_blob": "90e46bb1ba0ce624b4b52006627d4a333e1505e7",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/program_header.h": {
+      "sha256": "741def387bd7a374cd19e05bc532e9c82349a7ed150ddd4977a0086adacb9f5a",
+      "head_blob": "dd59a9f693d125380c7eabcc773570bfbd84d71b",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/runtime_info.h": {
+      "sha256": "6f1647cd4fb06131c2a31c98448599be1677ea5ee3e69296b43b85d2e8788951",
+      "head_blob": "dc54d932a63f110d5d15cdcd667f78ff663b110d",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/shader_info.h": {
+      "sha256": "921fa75e4d25c28352bdac9cf9a9218a4cc07b7da98e9afc64638a1e2224bdaf",
+      "head_blob": "ed13e682097088ff720c6944f777162c1edd331f",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/stage.h": {
+      "sha256": "c51c58a13ecffef5c6b6de3c7243b1d2ffba817b55aea8ac9c88b4274936e63b",
+      "head_blob": "9af0a1b72059d21d510f7c1b0097b430882f6e67",
+      "matches_head": false,
+      "matches_head_lf": true
+    },
+    "src/shader_recompiler/varying_state.h": {
+      "sha256": "63821c31590ad995233fd842710df53b33bfa402cc64e635c725916e6026cc1b",
+      "head_blob": "18a9aaf50f10498f14c58a2567e790f2c2f2ecfb",
+      "matches_head": false,
+      "matches_head_lf": true
+    }
+  }
+}

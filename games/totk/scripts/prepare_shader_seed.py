@@ -30,7 +30,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from shader_list import ShaderList   # noqa: E402
 
-CHAIN = 'totk-native-v8-unverified'
+CHAIN = 'totk-yuzu-cpp-v6'
 MIN_SHADERS = 8000
 ZSTD = b'\x28\xb5\x2f\xfd'
 YAZ0 = b'Yaz0'
@@ -175,7 +175,7 @@ def reusable_seed(output, identity, min_shaders=MIN_SHADERS):
 # Two caches beside the seed folder (<output>.inventory, <output>.translations), so a packaging whose shared list grew
 # scans nothing and translates only the new bind states. The list changes almost daily, and the whole-seed reuse above
 # then read the RomFS again (49 s) and translated all 35,275 jobs again (95 s) for 447 new rows (2026-10-21).
-INVENTORY_SCHEMA = 1
+INVENTORY_SCHEMA = 2
 TRANSLATIONS_SCHEMA = 1
 
 
@@ -187,9 +187,17 @@ def translation_request(variant, stage, control, code, answers, code_path):
     c1, length = struct.unpack_from('<II', control, 0x700)
     code_path.write_bytes(code[0 if stage == 'cs' else 0x30:length])
     request = dict(variant=variant, stage=stage, code=str(code_path.resolve()), c1=code[c1:length].hex(),
-                   depth_minus_w=True, **answers)
+                   c1_buffer_size=64 * 1024, depth_minus_w=True, **answers)
     if stage == 'cs':
+        if len(control) < 0x760:
+            raise ValueError('truncated compute shader control section')
+        shared, local, negative = struct.unpack_from('<III', control, 0x754)
+        if negative:
+            raise ValueError('compute negative local-memory allocation is unsupported')
         request['local'] = list(struct.unpack_from('<III', control, 0x748))
+        request['entry_point'] = struct.unpack_from('<I', control, 0x708)[0]
+        request['shared_memory'] = shared
+        request['local_memory'] = local
     if early_fragment_tests(stage, control):
         request['early_fragment_tests'] = True
     return request
@@ -463,7 +471,9 @@ def sharcb_shaders(data, game='totk'):
     if not 32 <= start <= pool or pool + pool_size > len(data):
         raise ValueError('agl shader package layout outside the file')
     seen = set()
-    for size in (b'\x80\x08\x00\x00', b'\x8c\x08\x00\x00', b'\xd1\x07\x00\x00', b'\x48\x08\x00\x00'):   # 0x880 / 0x88c; Breath of the Wild's 0x7d1 / 0x848
+    control_sizes = (0x880, 0x88c, 0x7d1, 0x848)
+    for control_size in control_sizes:
+        size = struct.pack('<I', control_size)
         at = start
         while (at := data.find(size, at, pool)) >= 0:
             record, at = at - 8, at + 4
@@ -473,6 +483,11 @@ def sharcb_shaders(data, game='totk'):
             control_at = record + struct.unpack_from('<i', data, record+12)[0]
             key_len = control_key_len(data[control_at:control_at+0x880]) if control_at >= start else 0
             if not key_len or not start <= control_at <= pool - key_len or code_off >= pool_size:
+                continue
+            declared = struct.unpack_from('<I', data, control_at+0x20)[0]
+            # Size words also occur in archive metadata: they are not records
+            # unless their target declares a supported control section that fits.
+            if declared not in control_sizes or declared > control_size or control_at+control_size > pool:
                 continue
             control = bound_control(data[control_at:control_at+key_len], game, embedded=False)
             c1, length = struct.unpack_from('<II', control, 0x700)
@@ -771,7 +786,8 @@ def prepare(romfs, output, translator, spirv_cross, version, shader_list=None, m
                         if process is None:
                             process = subprocess.Popen([str(translator), '--service', '--spirv-cross', str(spirv_cross),
                                                         '--out', str(staging), '--chain', CHAIN],
-                                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+                                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
+                                                       env=dict(os.environ, TOTK_SHADER_COMPILE_MODE='full'))
                         code_path = staging/(variant+'.code')
                         request = translation_request(variant, stage, control, code, answers, code_path)
                         process.stdin.write(json.dumps(request)+'\n'); process.stdin.flush()

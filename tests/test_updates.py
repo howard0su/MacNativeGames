@@ -265,8 +265,10 @@ class Updates(unittest.TestCase):
         for version, display in (('v112', '1.1.2'), ('v121', '1.2.1'), ('v143', '1.4.3')):
             with self.subTest(version=version):
                 tree=self.root/version;out=self.root/f'{version}.app'
-                files=[f'build/totk-native-{version}','build/pso_manifest.tsv','build/pso_title.tsv','build/spirv-cross/spirv-cross',
-                       'prebuilt/macos-arm64/totk_xlate','build/app-launcher',f'extracted/{version}/romfs/romfs.bin',
+                files=[f'build/totk-native-{version}','build/pso_manifest.tsv','build/pso_title.tsv',
+                       'build/shader-service/totk_xlate', 'build/shader-service/totk_xlate.json',
+                       'build/spirv-cross/spirv-cross',
+                       'build/app-launcher',f'extracted/{version}/romfs/romfs.bin',
                        f'extracted/{version}/romfs/runtime-index.bin',
                        f'build/shader-seed/{version}/seed-manifest.json',
                        f'build/shader-seed/{version}/pso_manifest.tsv']+[f'rewritten/{version}/{n}.patched.bin' for n in ('main','sdk','subsdk0')]
@@ -275,7 +277,7 @@ class Updates(unittest.TestCase):
                     p=tree/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'test')
                 import hashlib
                 (tree/f'build/shader-seed/{version}/seed-manifest.json').write_text(json.dumps(dict(
-                    version=version, chain='totk-native-v8-unverified', shaders=8000,
+                    version=version, chain=build_app.SHADER_CHAIN, shaders=8000,
                     files={'pso_manifest.tsv':hashlib.sha256(b'test').hexdigest()})))
                 with patch.object(build_app, 'app_seal_valid', return_value=True), patch.object(build_app, 'sign_app') as signing:
                     build_app.step_app(tree,out,self.root/'logs',version=version)
@@ -290,10 +292,20 @@ class Updates(unittest.TestCase):
                 self.assertTrue((res/f'rewritten/{version}/main.patched.bin').exists())
                 self.assertTrue((res/'build/shader-seed/seed-manifest.json').exists())
                 self.assertTrue((res/'build/pso_title.tsv').exists())   # the list the first frame waits for
+                self.assertTrue((res/'build/shader-service/totk_xlate.json').is_file())
+                self.assertTrue((res/'build/shader-service/totk_xlate').is_file())
+                self.assertTrue((res/'build/spirv-cross/spirv-cross').is_file())
                 self.assertEqual([p.name for p in (res/'rewritten').iterdir()], [version])
-                self.assertEqual(sorted(p.name for p in (res/'build/game-data').iterdir()), [version])   # runtime/game_data.h
+                self.assertEqual(sorted(p.name for p in (res/'build/game-data').iterdir()), [version])
                 for name in build_app.GAME_DATA:
                     self.assertTrue((res/f'build/game-data/{version}'/name).is_file())
+                seed_path = tree/f'build/shader-seed/{version}/seed-manifest.json'
+                seed = json.loads(seed_path.read_text())
+                seed['chain'] = 'totk-native-v8-unverified'
+                seed_path.write_text(json.dumps(seed))
+                with self.assertRaisesRegex(build_app.BuildError, 'invalid prepared startup shader seed'):
+                    build_app.step_app(tree, out, self.root/'logs', version=version)
+                self.assertTrue((out/'Contents/MacOS/TOTK').is_file())
 
     def test_failed_bundle_seal_preserves_previous_app(self):
         tree=self.root/'tree';out=self.root/'existing.app';out.mkdir()
@@ -303,7 +315,7 @@ class Updates(unittest.TestCase):
         game_data(tree,'v143')
         (tree/'build/shader-seed/v143/pso_manifest.tsv').write_bytes(b'test')
         (tree/'build/shader-seed/v143/seed-manifest.json').write_text(json.dumps(dict(
-            version='v143',chain='totk-native-v8-unverified',shaders=8000,
+            version='v143',chain=build_app.SHADER_CHAIN,shaders=8000,
             files={'pso_manifest.tsv':hashlib.sha256(b'test').hexdigest()})))
         def fake_clone(_source, target):
             target.parent.mkdir(parents=True,exist_ok=True)
@@ -318,7 +330,7 @@ class Updates(unittest.TestCase):
         tree=self.root/'tree';out=self.root/'existing.app';out.mkdir()
         (out/'keep.txt').write_text('previous working app')
         seed=tree/'build/shader-seed/v143';seed.mkdir(parents=True)
-        (seed/'seed-manifest.json').write_text(json.dumps(dict(version='v112',chain='totk-native-v8-unverified',shaders=1,files={'x':'0'*64})))
+        (seed/'seed-manifest.json').write_text(json.dumps(dict(version='v112',chain=build_app.SHADER_CHAIN,shaders=1,files={'x':'0'*64})))
         def fake_clone(_source, target):
             target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(b'synthetic payload')
         with patch.object(build_app,'clone',side_effect=fake_clone),patch.object(build_app,'app_seal_valid',return_value=True),patch.object(build_app,'sign_app') as signing:
@@ -335,7 +347,7 @@ class Updates(unittest.TestCase):
         seed=tree/'build/shader-seed/v143';seed.mkdir(parents=True)
         (seed/'pso_manifest.tsv').write_bytes(b'test')
         game_data(tree,'v143')
-        (seed/'seed-manifest.json').write_text(json.dumps(dict(version='v143',chain='totk-native-v8-unverified',shaders=8000,
+        (seed/'seed-manifest.json').write_text(json.dumps(dict(version='v143',chain=build_app.SHADER_CHAIN,shaders=8000,
             files={'pso_manifest.tsv':hashlib.sha256(b'test').hexdigest()})))
         def fake_clone(_source, target):
             target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(b'new app')

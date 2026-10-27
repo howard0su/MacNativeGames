@@ -1,10 +1,5 @@
-// The spirv-cross program inside the translation service (2026-10-23): the service ran SPIRV-Cross's own command line
-// program once per shader (fork, exec, the system's checks of a new program, the SPIR-V and MSL through files), which left
-// the translators waiting most of the time (8 services used ~4 of 10 cores while the seed was prepared). This file
-// compiles SPIRV-Cross's main.cpp (the pinned commit, build_app.py SPIRV_CROSS) into the service and runs its own
-// compile_iteration with the arguments the service passed on the command line, so the MSL is the program's, byte for
-// byte: same code path, same CLIArguments defaults. Service.cs SpirvCross calls it; TOTK_XLATE_SPIRV_CROSS=process runs
-// the program as before (A/B).
+// Reuse SPIRV-Cross's CLI defaults for the probe and process-mode test driver.
+// The production service calls CompilerMSL directly with the same pinned options.
 #include "spirv_cpp.hpp"
 #include "spirv_cross_util.hpp"
 #include "spirv_glsl.hpp"
@@ -12,6 +7,7 @@
 #include "spirv_msl.hpp"
 #include "spirv_parser.hpp"
 #include "spirv_reflect.hpp"
+#include "nvn_msl.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -37,12 +33,15 @@ struct CliExit : std::runtime_error
 
 #define exit(code) cli_exit(code)
 #define main spirv_cross_cli_main
+// Use the same metadata-driven NVN backend in the real process-mode driver.
+#define CompilerMSL NvnCompilerMSL
 #include "main.cpp"
+#undef CompilerMSL
 #undef main
 #undef exit
 
 // spirv-cross --msl --msl-version 20300 --msl-argument-buffers --msl-texture-buffer-native --msl-pad-fragment-output
-// (Service.cs Xc) on the SPIR-V words. Returns 0 and the MSL in *out, or 1 and the message the program printed in *err;
+// on the SPIR-V words. Returns 0 and the MSL in *out, or 1 and the message the program printed in *err;
 // free either with totk_spirv_cross_free.
 extern "C" int totk_spirv_cross_msl(const uint32_t *words, size_t count, char **out, char **err)
 {

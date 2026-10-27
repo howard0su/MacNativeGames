@@ -47,6 +47,29 @@ def bnsh_botw():
 
 
 class ShaderInventory(unittest.TestCase):
+    def test_compute_requests_preserve_entry_and_exact_memory_allocations(self):
+        control = bytearray(0x880)
+        struct.pack_into('<II', control, 0x700, 0x200, 0x300)
+        struct.pack_into('<I', control, 0x708, 0x100)
+        struct.pack_into('<IIIIII', control, 0x748, 8, 4, 1, 0x380, 0x40, 0)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'compute.code'
+            request = seed.translation_request('compute', 'cs', control, bytes(0x300), {}, path)
+            self.assertEqual(request['local'], [8, 4, 1])
+            self.assertEqual(request['entry_point'], 0x100)
+            self.assertEqual(request['shared_memory'], 0x380)
+            self.assertEqual(request['local_memory'], 0x40)
+            self.assertEqual(request['c1_buffer_size'], 65536)
+            self.assertEqual(len(path.read_bytes()), 0x300)
+            struct.pack_into('<II', control, 0x754, 0, 0)
+            request = seed.translation_request('compute', 'cs', control, bytes(0x300), {}, path)
+            self.assertEqual((request['shared_memory'], request['local_memory']), (0, 0))
+            with self.assertRaisesRegex(ValueError, 'truncated compute'):
+                seed.translation_request('compute', 'cs', control[:0x75f], bytes(0x300), {}, path)
+            struct.pack_into('<I', control, 0x75c, 16)
+            with self.assertRaisesRegex(ValueError, 'negative local-memory'):
+                seed.translation_request('compute', 'cs', control, bytes(0x300), {}, path)
+
     def test_the_key_hashes_the_control_sections_own_size_as_the_runtime_does(self):
         self.assertEqual(seed.control_key_len(bytes(0x880)), 0x880)              # no size word: the NVN 55 section
         self.assertEqual(seed.control_key_len(bytes(0x20)+struct.pack('<I', 0x88c)+bytes(0x860)), 0x880)   # 0x88c: hashed as 0x880
@@ -128,7 +151,8 @@ class ShaderInventory(unittest.TestCase):
         b = bytearray(0x2400)
         b[:4] = b'BAHS'; struct.pack_into('<8I', b, 0, 0x53484142, 9, len(b), 5, 0, 0x100, 0x400, 0x2000)
         def control(stage, length):
-            c = bytearray(0x880); struct.pack_into('<II', c, 0x700, 0x40, length); struct.pack_into('<I', c, 0x714, stage)
+            c = bytearray(0x880); struct.pack_into('<I', c, 0x20, 0x880)
+            struct.pack_into('<II', c, 0x700, 0x40, length); struct.pack_into('<I', c, 0x714, stage)
             return bytes(c)
         struct.pack_into('<QIi', b, 0x100, 0x000, 0x880, 0x60); b[0x160:0x160+0x880] = control(0, 0x100)
         struct.pack_into('<QIi', b, 0x1000, 0x100, 0x88c, 0x60); b[0x1060:0x1060+0x880] = control(1, 0x200)  # 0x88c: hashed as 0x880
@@ -140,6 +164,21 @@ class ShaderInventory(unittest.TestCase):
                 hashlib.sha256(control(1, 0x200)+bytes([2])*0x100+bytes(0x100)).hexdigest(): ('ps', 0x200),
                 hashlib.sha256(control(0, 0x100)+bytes([3])*0x100).hexdigest(): ('vs', 0x100)}
         self.assertEqual(got, want)
+
+    def test_agl_rejects_false_records_without_a_matching_control_extent(self):
+        for declared in (0, 0x30, 0x44700, 0x88c):
+            with self.subTest(declared=declared):
+                data = bytearray(0x2200)
+                data[:4] = b'BAHS'; struct.pack_into('<3I', data, 20, 0x100, 0x200, 0x2000)
+                for record, control, code, size in ((0x100, 0x200, 0, 0x880), (0x1000, 0x1100, 0x100, declared)):
+                    struct.pack_into('<QIi', data, record, code, 0x880, control-record)
+                    struct.pack_into('<I', data, control+0x20, size)
+                    struct.pack_into('<II', data, control+0x700, 0x80, 0x100)
+                data[0x2000:0x2100] = b'\x11'*0x100
+                data[0x2100:0x2200] = b'\x22'*0x100
+                rows = list(seed.sharcb_shaders(data))
+                self.assertEqual(len(rows), 1)
+                self.assertEqual(rows[0][3], b'\x11'*0x100)
 
     def test_listed_bind_states_become_jobs_for_shaders_in_this_game(self):
         found = {'a'*64: ('vs', b'', b'', 'Shader/x'), 'b'*64: ('ps', b'', b'', 'Effect/y')}
@@ -629,11 +668,16 @@ int main(int argc, const char **argv) { @autoreleasepool {
             self.run_probe(source, cache, good=False)
 
     def test_wrong_chain_corruption_and_path_traversal_are_rejected(self):
-        for mutation in ['chain', 'hash', 'path']:
+        for mutation in ['chain', 'previous-cpp-chain', 'previous-cpp-v2',
+                         'previous-cpp-v3', 'previous-cpp-v4', 'hash', 'path']:
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as folder:
                 source, cache, key, variant = self.fixture(Path(folder))
                 p = source/'seed-manifest.json'; m = json.loads(p.read_text())
                 if mutation == 'chain': m['chain'] = 'other-chain'
+                elif mutation == 'previous-cpp-chain': m['chain'] = 'totk-yuzu-cpp-v1'
+                elif mutation == 'previous-cpp-v2': m['chain'] = 'totk-yuzu-cpp-v2'
+                elif mutation == 'previous-cpp-v3': m['chain'] = 'totk-yuzu-cpp-v3'
+                elif mutation == 'previous-cpp-v4': m['chain'] = 'totk-yuzu-cpp-v4'
                 elif mutation == 'hash': (source/(variant+'_b.metal')).write_text('corrupt')
                 else: m['files']['../escape'] = '0'*64
                 p.write_text(json.dumps(m))

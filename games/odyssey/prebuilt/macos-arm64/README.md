@@ -1,5 +1,9 @@
 # The shader translator, ready-made
 
+These are historical notes for Odyssey's unchanged legacy binary. The former
+TOTK C# project and patches named below remain in Git history.
+Odyssey has not been switched to Yuzu C++.
+
 `totk_xlate` is the program the game starts to translate its shaders (`totk_xlate --service`): the Ryujinx shader
 translator (`vendor/ryujinx`, MIT) with this project's patches (`games/totk/tools/totk_xlate/patches`) and the service
 (`games/totk/tools/totk_xlate/Service.cs`: Maxwell code -> SPIR-V -> SPIRV-Cross -> Metal Shading Language and its

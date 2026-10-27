@@ -71,6 +71,8 @@ Everything from building the app to playing is in **[docs/install.md](docs/insta
 
 See [docs/how-it-works.md](docs/how-it-works.md).
 
+Shader service interface and build/runtime compilation: [shader translator](docs/shader-translator.md).
+
 Recorded performance experiments, remaining work and comparison methods: [Mac performance follow-ups](docs/performance-followups.md).
 
 Measuring by game state with the Metal performance tools of macOS 27 (`TOTK_STATE_REPORTING=1`, `metal_perf_report.py`): [Metal performance diagnostics](docs/metal-performance-diagnostics.md).
@@ -79,7 +81,7 @@ Measuring by game state with the Metal performance tools of macOS 27 (`TOTK_STAT
 
 - **[d2r-mobile](https://github.com/jhaizhou-ops/d2r-mobile)** (MIT) developed this way of running Switch games natively (for Diablo II: Resurrected): the NSO rewriter, the Horizon host and the NVN-on-Metal layer here started as its generic parts.
 - **[nxnative](https://github.com/seedds/nxnative)**: the one-script packaging and NSP common-ticket import follow its approach.
-- **Ryujinx** (MIT): its shader translator (`vendor/ryujinx`) turns the game's Maxwell shaders into SPIR-V, and its system-service code is a reference. With this project's patches and service it is compiled ahead of time (.NET NativeAOT) into `games/totk/prebuilt/macos-arm64/totk_xlate`; `games/totk/tools/totk_xlate/publish_native.sh` rebuilds it (needs the .NET 10 SDK, only for developers).
+- **Yuzu** (GPL-2.0-or-later, with GPL-3.0-or-later adaptations): the copied Maxwell shader compiler (`vendor/yuzu`) powers the native C++ service, built from source into `games/totk/build/shader-service/totk_xlate` for offline and online TOTK/BOTW translation. Build with `make -C games/totk shader-service`; see [the service contract and limitations](docs/shader-translator.md). **Ryujinx** (MIT) remains a system-service reference; the retired TOTK C# shader project and archived executable have been removed, with no runtime fallback.
 - **[SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross)** (Apache-2.0) turns SPIR-V into Metal Shading Language; it is fetched at a pinned commit and compiled with clang during the build.
 - **deko3d** (zlib): texture layout sizes. **bcdec**: BC texture decoding. **libopus** and **libvpx** (BSD) from Homebrew: audio and the pre-rendered movies.
 
@@ -165,7 +167,7 @@ Apple、Mac、iPhone、iPad、Apple Vision Pro 和 Metal 是 Apple Inc. 的商�
 
 - **[d2r-mobile](https://github.com/jhaizhou-ops/d2r-mobile)**（MIT）为《暗黑破坏神 II：狱火重生》开发了这套原生运行 Switch 游戏的方法：这里的 NSO 改写器、Horizon 宿主和 Metal 上的 NVN 层都从它的通用部分起步。
 - **[nxnative](https://github.com/seedds/nxnative)**：“用户自己的游戏文件 + 一个脚本出包”和 NSP 通用票据读取的做法借鉴自它；本项目只构建 Mac App。
-- **Ryujinx**（MIT）：它的着色器翻译器（`vendor/ryujinx`）把游戏的 Maxwell 着色器转成 SPIR-V，它的系统服务代码也是参考。加上本项目的补丁和着色器服务，用 .NET NativeAOT 预先编成原生程序 `games/totk/prebuilt/macos-arm64/totk_xlate`；改了翻译器用 `games/totk/tools/totk_xlate/publish_native.sh` 重编（要 .NET 10 SDK，只有开发者需要）。
+- **Yuzu**（GPL-2.0-or-later，含 GPL-3.0-or-later 修改）：复制到 `vendor/yuzu` 的 Maxwell 着色器编译器用于从源码构建到 `games/totk/build/shader-service/totk_xlate` 的原生 C++ 服务，负责 TOTK/BOTW 的离线和在线翻译。用 `make -C games/totk shader-service` 构建；参见[服务接口与限制](docs/shader-translator.md)。**Ryujinx**（MIT）仍是系统服务参考；已移除停用的 TOTK C# 着色器项目和归档程序，不提供运行时后备。
 - **[SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross)**（Apache-2.0）把 SPIR-V 转成 Metal 着色语言；打包时按固定提交取得，用 clang 编。
 - **deko3d**（zlib）：贴图布局尺寸。**bcdec**：BC 贴图解码。**libopus**、**libvpx**（BSD，来自 Homebrew）：音频和预渲染影片。
 

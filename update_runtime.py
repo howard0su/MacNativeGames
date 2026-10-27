@@ -302,7 +302,8 @@ def main(argv):
     work = args.work.expanduser().resolve() if args.work else app.parent / ('BotW_build' if game == 'botw' else 'TOTK_build')
     py = build_app.prerequisites(args)
     logs = work / 'logs'
-    env = dict(os.environ, PATH=os.pathsep.join(build_app.TOOL_PATHS + [os.environ.get('PATH', '/usr/bin:/bin:/usr/sbin:/sbin')]))
+    env = dict(os.environ, MNG_REPOSITORY=str(build_app.REPO),
+               PATH=os.pathsep.join(build_app.TOOL_PATHS + [os.environ.get('PATH', '/usr/bin:/bin:/usr/sbin:/sbin')]))
     if game == 'botw':   # the game's own shared shader list (build_app.py main)
         env['SHADER_LIST'] = '../botw/assets/shader_list.tsv'
     t0 = time.time()
@@ -322,7 +323,7 @@ def main(argv):
     build_app.build_launcher(tree, version, logs, env)
     if not (tree / 'build/spirv-cross/spirv-cross').exists():
         build_app.build_spirv_cross(tree, logs)
-    build_app.check_translator(tree)
+    build_app.build_shader_service(tree, logs)
     say(f'assembling the updated app next to {app.name}')
     tmp = app.with_name(app.name + '.partial')
     if tmp.exists():

@@ -1,4 +1,7 @@
 GFX_SRC := $(wildcard third_party/d2r_gfx/gfx/nvn/*.c third_party/d2r_gfx/gfx/nvn/*.m third_party/d2r_gfx/gfx/nvn/*.S third_party/d2r_gfx/gfx/tex/*.c third_party/d2r_gfx/gfx/tex/*.m)
+.DEFAULT_GOAL := help
+MNG_REPOSITORY ?= $(abspath ../..)
+export MNG_REPOSITORY
 GFX_OBJECTS := $(addprefix build/gfx/,$(addsuffix .o,$(GFX_SRC)))
 NATIVE_OPT ?= -O2
 GFX_FLAGS := -std=gnu11 -Wno-error -Wno-unused-function -Wno-unused-parameter -fobjc-arc -Ithird_party/d2r_gfx/gfx/nvn/include
@@ -156,8 +159,9 @@ shader-inventory: graphics-assets
 	tooling/dotnet/dotnet run --project scripts/shader_inventory -- extracted/v0/graphics extracted/v0/shaders-v2
 	"$(PY)" scripts/verify_shader_inventory.py
 
-verify-shaders:
-	"$(PY)" scripts/verify_shader_compilation.py
+verify-shaders: shader-service
+	cmake --build build/totk_xlate --parallel 4
+	ctest --test-dir build/totk_xlate --output-on-failure
 
 build/thread-probe: scripts/thread_probe.c runtime/threads.c runtime/thread_compat.h runtime/thread_enter.S
 	xcrun clang -std=c11 -O1 -g -Wall -Wextra -Werror -Ithird_party/d2r_gfx/gfx/nvn/include scripts/thread_probe.c runtime/threads.c runtime/thread_enter.S -o "$@"
@@ -274,28 +278,14 @@ probe-autoload: build/autoload-probe
 	@if env -u TOTK_AUTOLOAD TOTK_AUTOLOAD_PERIOD_MS=400 build/autoload-probe press 2>/dev/null; then echo "autoload negative control passed unexpectedly"; exit 1; \
 	 else echo "autoload negative control (auto-load off, presses expected) failed as expected"; fi
 
-.PHONY: shader-tools
-# The pinned Ryujinx shader translator is copied out of the D2R checkout and patched (tools/totk_xlate/patches).
-RYU_PINNED := tooling/d2r-mobile/dm/third_party/ryujinx
-shader-tools:
-	rm -rf build/ryujinx-src && mkdir -p build/ryujinx-src && cp -R $(RYU_PINNED)/. build/ryujinx-src/
-	find build/ryujinx-src/src -maxdepth 2 \( -name obj -o -name bin \) -type d -exec rm -rf {} +
-	for p in tools/totk_xlate/patches/*.patch; do patch -d build/ryujinx-src -p1 --forward < "$$p" || exit 1; done
-	tooling/dotnet/dotnet build tools/totk_xlate/totk_xlate.csproj -c Release -o build/totk_xlate -p:RyuSrc=../../build/ryujinx-src
+.PHONY: shader-tools shader-service
+shader-tools: shader-service
 
-.PHONY: shader-service
-# The runtime shader translation service as one native program (2026-10-17): the patched translator of make shader-tools
-# plus tools/totk_xlate/Service.cs (the port of scripts/shader_service.py), published with NativeAOT. The runtime uses
-# build/shader-service/totk_xlate when it is there (no Python, no .NET runtime; TOTK_SHADER_SERVICE=python for the old
-# path). Check a change: scripts/diag/retranslate_cache.py --service build/shader-service/totk_xlate --compare <cache>.
 shader-service:
-	@test -d build/ryujinx-src || { echo "make shader-tools first (it prepares the patched translator sources)"; exit 1; }
-	tooling/dotnet/dotnet publish tools/totk_xlate/totk_xlate.csproj -c Release -r osx-arm64 -p:PublishAot=true \
-	  -p:InvariantGlobalization=true -p:RyuSrc=../../build/ryujinx-src -o build/shader-service
+	python3 -c 'import os, sys; from pathlib import Path; sys.path.insert(0, os.environ["MNG_REPOSITORY"]); from build_app import build_shader_service; build_shader_service(Path("."), Path("build/shader-service-logs"))'
 
 .PHONY: graphics-tools
-graphics-tools:
-	tooling/dotnet/dotnet build tooling/d2r-mobile/dm/gfx/tools/dmsh_xlate/dmsh_xlate.csproj -c Release -o build/dmsh_xlate
+graphics-tools: shader-service
 	cmake -S tooling/spirv-cross -B build/spirv-cross -DCMAKE_BUILD_TYPE=Release -DSPIRV_CROSS_ENABLE_TESTS=OFF
 	cmake --build build/spirv-cross -j 4
 

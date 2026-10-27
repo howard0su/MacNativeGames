@@ -16,4 +16,4 @@ import prepare_shader_seed  # noqa: E402
 
 if __name__ == '__main__':
     sys.argv[1:1] = ['--game', 'botw']
-    prepare_shader_seed.main()
+    sys.exit(prepare_shader_seed.main())

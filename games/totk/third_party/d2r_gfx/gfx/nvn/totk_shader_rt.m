@@ -2,8 +2,7 @@
 // translation ("variant") also records the translator answers it depended on (texture slot types, vertex
 // input and colour output component types). A variant is reused only when those answers match the current
 // bound state; otherwise a new one is produced by the translation service and cached on disk: the native program
-// build/shader-service/totk_xlate --service when it is there (tools/totk_xlate/Service.cs, NativeAOT: no Python, no .NET
-// runtime; 2026-10-17), else scripts/shader_service.py with the .NET translator. Same requests, replies and cache files.
+// build/shader-service/totk_xlate --service (tools/totk_xlate/service.cpp, Yuzu C++: no Python or .NET).
 #import <Foundation/Foundation.h>
 #include "totk_ui_lang.h"
 #include "dm_wait_stats.h"
@@ -168,38 +167,25 @@ static void service_start(rt_svc *svc) {
     posix_spawn_file_actions_adddup2(&fa, to[0], 0); posix_spawn_file_actions_adddup2(&fa, from[1], 1);
     posix_spawn_file_actions_adddup2(&fa, 2, 2);   // the same descriptor: only clears close-on-exec
     /* An empty signal mask: a child inherits the spawning thread's, and a GCD worker (bg_translate) blocks SIGCHLD among
-       others. The .NET translator then never learns that its spirv-cross child exited and waits forever (2026-10-21). */
+       others. A translator using an external SPIRV-Cross must be able to observe its child's exit. */
     posix_spawnattr_t sa; posix_spawnattr_init(&sa); sigset_t none; sigemptyset(&none); posix_spawnattr_setsigmask(&sa, &none);
     posix_spawnattr_setflags(&sa, POSIX_SPAWN_CLOEXEC_DEFAULT | POSIX_SPAWN_SETSIGMASK);
     NSString *sc = [r stringByAppendingString:@"/build/spirv-cross/spirv-cross"];
-    // TOTK_SHADER_XLATE=<totk_xlate.dll> runs a trial translator build (e.g. build/totk_xlate-opt) without replacing the
-    // shared one (through shader_service.py); TOTK_SHADER_DEBUGMODE=0|1 reaches either service through the environment.
-    // TOTK_SHADER_SERVICE=python | native picks the service (default: native when build/shader-service/totk_xlate is there).
     const char *xe = getenv("TOTK_SHADER_XLATE"), *want = getenv("TOTK_SHADER_SERVICE"), *dm = getenv("TOTK_SHADER_DEBUGMODE");
     NSString *native = [r stringByAppendingString:@"/build/shader-service/totk_xlate"];
-    int have_native = access(native.fileSystemRepresentation, X_OK) == 0;
-    int use_native = have_native && !(xe && *xe) && !(want && !strcmp(want, "python"));
-    if (want && !strcmp(want, "native") && !use_native) die("TOTK_SHADER_SERVICE=native but %s is not there (make shader-service)", native.UTF8String);
+    if (xe && *xe) die("TOTK_SHADER_XLATE is no longer supported; rebuild the C++ shader service");
+    if (want && *want && strcmp(want, "native")) die("only TOTK_SHADER_SERVICE=native is supported (Yuzu C++)");
+    if (access(native.fileSystemRepresentation, X_OK)) die("shader service %s is not there (make shader-service)", native.UTF8String);
     pid_t pid;
-    if (use_native) {
-        const char *argv[] = {native.UTF8String, "--service", "--spirv-cross", sc.UTF8String, "--out", totk_rt_dir().UTF8String,
-                              "--chain", DMSH_CHAIN, NULL};
-        if (posix_spawn(&pid, argv[0], &fa, &sa, (char *const *)argv, environ)) die("start shader service %s", argv[0]);
-        if (dm) LOG("[shader] native translator, DebugMode %s", dm);
-    } else {
-        NSString *script = [r stringByAppendingString:@"/scripts/shader_service.py"], *dotnet = [r stringByAppendingString:@"/tooling/dotnet/dotnet"];
-        NSString *xlate = xe && *xe ? @(xe) : [r stringByAppendingString:@"/build/totk_xlate/totk_xlate.dll"];
-        const char *argv[] = {"python3", "-I", script.UTF8String, "--dotnet", dotnet.UTF8String, "--xlate", xlate.UTF8String,
-                              "--spirv-cross", sc.UTF8String, "--out", totk_rt_dir().UTF8String, "--chain", DMSH_CHAIN, NULL};
-        if (posix_spawnp(&pid, "python3", &fa, &sa, (char *const *)argv, environ)) die("start shader service");
-        if (xe || dm) LOG("[shader] translator %s, DebugMode %s", xlate.UTF8String, dm ? dm : "default");
-    }
+    const char *argv[] = {native.UTF8String, "--service", "--spirv-cross", sc.UTF8String, "--out", totk_rt_dir().UTF8String,
+                          "--chain", DMSH_CHAIN, NULL};
+    if (posix_spawn(&pid, argv[0], &fa, &sa, (char *const *)argv, environ)) die("start shader service %s", argv[0]);
+    if (dm) LOG("[shader] native translator, DebugMode %s", dm);
     posix_spawn_file_actions_destroy(&fa); posix_spawnattr_destroy(&sa);
     close(to[0]); close(from[1]);
     svc->in = fdopen(to[1], "w"); svc->out = fdopen(from[0], "r");
     if (!svc->in || !svc->out) die("shader service streams");
-    LOG("[shader] runtime translation service started (pid %d, %s), cache %s", pid,
-        use_native ? "native build/shader-service/totk_xlate" : "python3 scripts/shader_service.py + .NET", totk_rt_dir().UTF8String);
+    LOG("[shader] runtime translation service started (pid %d, Yuzu C++), cache %s", pid, totk_rt_dir().UTF8String);
     pthread_mutex_unlock(&g_svc_start_lock);
 }
 
@@ -248,7 +234,7 @@ static NSMutableArray *variants_of(NSString *shader) {
 }
 /* Whether a variant translated with deps serves these answers. A texture slot whose kind the translator took from the
    sampling instruction records only whether a depth-format texture sits there: "*" (any other) or "*_depth"
-   (Service.cs, docs/shader-variants.md). Vertex input and colour output types do not matter: the pipeline redeclares an
+   (resource_abi.cpp, docs/shader-variants.md). Vertex input and colour output types do not matter: the pipeline redeclares an
    input whose type differs from its bound format's (nvn_mtl.m vs_vin, 2026-10-25) and an output whose type differs from
    its render target's (fn_retype_outputs, 2026-10-26), and an unbound input gets a constant of the declared type
    (pso_desc), so any variant serves them. prepare_shader_seed.py deps_match is the same. */
@@ -335,7 +321,15 @@ static NSMutableDictionary *variant_request(NSString *shader, int stage, const u
     else if (![bytes writeToFile:code_path atomically:YES]) die("write shader code %s", code_path.UTF8String);
     NSMutableDictionary *rq = [NSMutableDictionary dictionaryWithDictionary:@{@"variant": variant, @"stage": stage_name(stage), @"code": code_path, @"c1": hex(code + c1o, c1t - c1o)}];
     [rq addEntriesFromDictionary:answers];
+    rq[@"c1_buffer_size"] = @65536;
     if (local) rq[@"local"] = local;
+    if (stage == 5) {
+        uint32_t entry, shared, local_bytes, negative;
+        memcpy(&entry, control + 0x708, 4); memcpy(&shared, control + 0x754, 4);
+        memcpy(&local_bytes, control + 0x758, 4); memcpy(&negative, control + 0x75c, 4);
+        if (negative) die("shader %s: compute negative local-memory allocation is unsupported", shader.UTF8String);
+        rq[@"entry_point"] = @(entry); rq[@"shared_memory"] = @(shared); rq[@"local_memory"] = @(local_bytes);
+    }
     rq[@"depth_minus_w"] = totk_depth_near_minus_w() ? @YES : @NO;   // nvnDeviceSetDepthMode: NEAR_IS_MINUS_W needs the GL -> Metal clip-z conversion in every vertex shader
     /* A fragment shader's early fragment tests: control byte +0x718 of the 0x880-byte sections (the NVN driver reads it as
        a fragment flag and the Switch tests depth before the shader). Breath of the Wild's shorter sections (the size word
@@ -390,7 +384,7 @@ void totk_rt_contrib_line(NSString *line) {   // totk_contrib_add_line under the
     totk_contrib_add_line(line);
     pthread_mutex_unlock(&g_rt_lock);
 }
-/* No translator on the phone (Python + .NET + SPIRV-Cross): the variant cache is translated on the Mac and copied over.
+/* No translator process on the phone: the variant cache is translated on the Mac and copied over.
    A miss records the complete request (with the guest code bytes) under shader-requests/ for ios/tools/fill_shaders.py.
    A miss no longer stops the game: the caller skips the draws / dispatches that need this variant (draw-skip reason
    "shader-missing"). The request is written once per variant; after fill_shaders.py pushed the translation, the next

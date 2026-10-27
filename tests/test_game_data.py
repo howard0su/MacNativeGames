@@ -160,7 +160,7 @@ class UpdateRuntime(unittest.TestCase):
     def test_seed_of_another_chain_is_refused(self):
         _, res, _ = self.app()
         chain = update_runtime.runtime_chain()
-        self.assertRegex(chain, r'^totk-native-v\d+-')
+        self.assertEqual(chain, build_app.SHADER_CHAIN)
         with self.assertRaisesRegex(build_app.BuildError, 'no readable startup shader seed'):
             update_runtime.check_seed_chain(res, chain)
         (res / 'build/shader-seed').mkdir(parents=True)
@@ -321,7 +321,8 @@ class UpdateRuntime(unittest.TestCase):
     def test_place_runtime_replaces_only_the_runtime(self):
         app, res, _ = self.app()
         tree = self.root / 'tree'
-        for rel in ('build/totk-native-v143', 'build/spirv-cross/spirv-cross', 'prebuilt/macos-arm64/totk_xlate',
+        for rel in ('build/totk-native-v143', 'build/spirv-cross/spirv-cross', 'build/shader-service/totk_xlate',
+                    'build/shader-service/totk_xlate.json',
                     'build/pso_manifest.tsv', 'build/pso_title.tsv', 'build/app-launcher'):
             (tree / rel).parent.mkdir(parents=True, exist_ok=True)
             (tree / rel).write_bytes(b'new ' + rel.encode())

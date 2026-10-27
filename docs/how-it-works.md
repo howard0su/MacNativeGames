@@ -73,12 +73,17 @@ The memory is real, though: the committed heap grows by the same amount, so on a
 The game records NVN commands (Nintendo's graphics API) into command buffers. The NVN layer implements the API on the
 host and replays each submitted command buffer on Metal 4: textures and buffers in the game's memory pools become
 Metal resources (with dirty-page tracking for what the CPU changes), render targets become render passes, and draws
-become Metal draws. Shaders are Maxwell machine code: the first time one is used it is translated by the Ryujinx shader
-translator (to SPIR-V), SPIRV-Cross (to Metal Shading Language) and Metal, and the result is cached
+become Metal draws. Shaders are Maxwell machine code: the first time one is used it is translated by the copied Yuzu
+C++ compiler (to SPIR-V), SPIRV-Cross (to Metal Shading Language) and Metal, and the result is cached
 (`~/Library/Application Support/MacNativeGames/TOTK/shader-cache`). The translator runs as one native program,
-`totk_xlate --service` (`games/totk/tools/totk_xlate`: the Ryujinx translator with this project's patches and the
-service that turns each request into the MSL and its reflection file), compiled ahead of time with .NET NativeAOT; it
-ships ready-made in `games/totk/prebuilt/macos-arm64`, so neither building nor playing needs .NET, and playing needs no Python. Building still requires Python 3.14. The build also prepares a selected-version startup shader seed from the local RomFS: MSL, reflection and dependency indexes, not GPU-specific compiled binaries. The first launch imports it into the user cache and warms it before releasing the first frame. A pipeline identifier list alone cannot do this when its shaders are absent. New binding-dependent variants still use runtime translation. MetalFX upscales the game's 1600x900 scene into its
+`totk_xlate --service` (`games/totk/tools/totk_xlate`: the native service that turns each request into MSL and its
+reflection file). App builds compile it from source with CMake, a C++20 compiler, fmt and Boost headers,
+so shader translation needs no .NET, and playing needs neither Python nor build tools. Building requires Python 3.14. Both online misses and offline compilation
+use `full`, retaining the full optimization/verification pipeline. The build also prepares a selected-version startup shader seed
+from the local RomFS: MSL, reflection and dependency indexes. The signed seed is available on first launch without
+a played cache. Current macOS rebuilds enable startup shader/pipeline prewarming; previously unseen variants can
+still cause first-use stalls. A pipeline identifier list alone cannot supply absent shader code.
+New binding-dependent variants still use runtime translation. MetalFX upscales the game's 1600x900 scene into its
 1080p or 1440p canvas and can generate in-between frames.
 
 ## Texture storage layout
@@ -111,7 +116,7 @@ Over the 18,064 startup variants of a 1.4.3 build, the patched translator change
 
 Many surfaces are drawn twice: a depth prepass (alpha test, depth written) and then the G-buffer pass, which colours only the samples whose depth is EQUAL to the prepass's and writes no depth. The material fragment shaders of the G-buffer pass also store a per-tile flag to memory. A Metal fragment function that stores to memory has its depth test after it runs, unless it declares `[[early_fragment_tests]]`, and on Apple GPUs that late test saw a depth an ulp away from the one the prepass wrote along contour lines: the G-buffer kept its clear value there, and the stone lattice in front of the Great Sky Island start was covered in rows of dark dots (every resolution). The two vertex functions compute bit-identical positions, in the MSL and in the compiled AIR, and `preserveInvariance` changed nothing.
 
-On the Switch these shaders test depth first. Byte `+0x718` of a fragment shader's NVN control section is its early-fragment-tests flag: the game's NVN driver reads it with the other fragment flags at `+0x719..+0x71d`, and Ryujinx receives it as the 3D engine's `EarlyZForce`. The runtime's translation requests and `prepare_shader_seed.py` pass it as `early_fragment_tests` (0x880-byte sections only; Breath of the Wild's shorter ones are not read), and `totk_xlate` gives it to the Ryujinx translator, whose SPIR-V then declares `EarlyFragmentTests` and the MSL `[[early_fragment_tests]]`. Of the 13,645 fragment shaders of 1.4.3, 1,677 set the flag, among them 775 of the 840 that store without discarding; none of them writes depth or a sample mask. The flagged shaders' MSL changes under the same variant names, so the translation chain went from `totk-native-v7-unverified` to `totk-native-v8-unverified`: a v7 cache would keep serving them without the attribute.
+On the Switch these shaders test depth first. Byte `+0x718` of a fragment shader's NVN control section is its early-fragment-tests flag: the game's NVN driver reads it with the other fragment flags at `+0x719..+0x71d`. The runtime's translation requests and `prepare_shader_seed.py` pass it as `early_fragment_tests` (0x880-byte sections only; Breath of the Wild's shorter ones are not read). The C++ service sets Yuzu's `RuntimeInfo::force_early_z`, emitting SPIR-V `EarlyFragmentTests` and MSL `[[early_fragment_tests]]`. Of the 13,645 fragment shaders of 1.4.3, 1,677 set the flag, among them 775 of the 840 that store without discarding; none of them writes depth or a sample mask. The historical Ryujinx fix changed the chain from `totk-native-v7-unverified` to `totk-native-v8-unverified`; the current C++ backend uses its own `totk-yuzu-cpp-v6` chain rather than reusing those old outputs.
 
 ## Buffer copies through aliased memory
 
@@ -162,7 +167,7 @@ is also `read()` is refused. The original game's 1.2.1 report found the squares 
    overlays. Every listed file is hashed at start, and each one is opened only when the game opens it. A line whose
    original SHA-256 is `-` adds a file the RomFS lacks (numbered after the RomFS's own files; its folders exist for the
    game's entry-type queries); `scripts/make_mod_manifest.py` writes such lines for new files.
-3. SPIRV-Cross compiled with clang; the prebuilt shader translator checked against its SHA-256. `prepare_shader_seed.py`
+3. SPIRV-Cross compiled with clang; the C++ shader translator built incrementally with CMake and verified against its generated SHA-256/backend manifest. `prepare_shader_seed.py`
    reads dictionary-compressed startup packages from the selected, verified RomFS, parses supported NVN BNSH programs
    and translates default-binding variants. The version, translation chain, translator/preparer hashes and every
    output file are checked before cache reuse and packaging. No prior user shader cache is read.

@@ -1,5 +1,12 @@
 # Shader variants from the code, not from play
 
+The measurements below describe the historical Ryujinx dependency optimization,
+before the Yuzu C++ cutover. The retired C# implementation has been removed.
+The current C++ service derives dependencies from compiler/resource metadata,
+preserves the wildcard matching contract, and uses `totk-yuzu-cpp-v6`; it does
+not reproduce every old inference heuristic. See [the current service
+contract](shader-translator.md).
+
 A game shader is translated for the bind state of a draw (`deps`: texture kinds, image formats, vertex input and
 fragment output types). Until 2026-10-22 almost every bound texture slot was a dependency, so one shader had up to nine
 variants, and the ones a build did not carry had to be met in play and collected in the shared list
@@ -18,7 +25,7 @@ differed in its logic, only in declarations:
 | Integer vertex input | 2,364 (24 %) | `uint4` input; 834 of 837 are, in the float variant too, only bitcast to integers or used as indices |
 | Integer colour output | 130 (1 %) | `uint4` output |
 
-## What the translator does now (`games/totk/tools/totk_xlate/Service.cs`)
+## Historical translator behavior (2026-10-22)
 
 - A texture slot whose kind it did not query (Ryujinx queries it only for size queries, 1D / buffer and bindless) is
   recorded as `"*"`, or `"*_depth"` when a depth-format texture is bound there. The MSL is the one the old translator

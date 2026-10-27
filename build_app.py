@@ -23,9 +23,8 @@ signature, or signed again by a dump tool once all four code modules match, shar
      games/totk/scripts/patch_sites.py), the three code modules rewritten for Apple silicon
      (games/totk/third_party/d2r)
   2. data: RomFS (17 GB), the system shared fonts (from XCI firmware or an explicit font source), the RomFS overlays
-  3. shaders: SPIRV-Cross (fetched at a pinned commit, compiled with clang) and the shader translator, which ships
-     ready-made as a native program (games/totk/prebuilt/macos-arm64: vendor/ryujinx + patches + Service.cs, made with
-     games/totk/tools/totk_xlate/publish_native.sh); startup shaders are extracted from your selected RomFS and
+  3. shaders: SPIRV-Cross (fetched at a pinned commit, compiled with clang) and the native C++ shader translator,
+     compiled from games/totk/tools/totk_xlate and vendor/yuzu with CMake; startup shaders are extracted from your selected RomFS and
      translated into a bundled seed, ready for GPU warm-up even with an empty cache on the first launch
   4. the game binary and either a macOS app bundle or an unsigned iPhone/iPad IPA (large game data is cloned when possible);
      for the Mac the startup shaders are then compiled once into this Mac's Metal cache (about 12 minutes for 1.4.3 on an M4 Max), so the
@@ -41,7 +40,7 @@ update_runtime.py "<the app>". Mac saves, shader cache and logs go to the user's
 and the writable shader cache in the app's Documents container.
 
 Needs for Mac: macOS 26 or later on Apple silicon, the Xcode command line tools, Homebrew with
-    brew install opus libvpx python@3.14
+    brew install opus libvpx python@3.14 cmake fmt boost
 For iPhone/iPad: Xcode 26+ with iOS/Metal toolchains, plus xcodegen, CMake and Ninja.
 Optional: Xcode's Metal toolchain (xcodebuild -downloadComponent MetalToolchain) compiles the startup shaders into the
 app, so moving or rebuilding it does not repeat that work at launch.
@@ -83,7 +82,8 @@ GAME_LANGUAGES = ('en', 'ja', 'fr', 'de', 'es', 'it', 'nl', 'ru', 'ko', 'zh-Hans
 LSREGISTER = '/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister'
 # Pinned upstream sources fetched at build time (repository, commit)
 SPIRV_CROSS = ('https://github.com/KhronosGroup/SPIRV-Cross.git', 'aa217aeb6c9f0ace7a0ab233b28807edf45eb165')
-# The spirv-cross program: the sources and flags of SPIRV-Cross's own CMake Release build of it, so no cmake is needed
+SHADER_CHAIN = 'totk-yuzu-cpp-v6'
+# The standalone spirv-cross CLI is built directly; the native shader service uses CMake.
 SPIRV_CROSS_SOURCES = ('main.cpp', 'spirv_cfg.cpp', 'spirv_cpp.cpp', 'spirv_cross.cpp', 'spirv_cross_parsed_ir.cpp',
                        'spirv_cross_util.cpp', 'spirv_glsl.cpp', 'spirv_hlsl.cpp', 'spirv_msl.cpp', 'spirv_parser.cpp',
                        'spirv_reflect.cpp')
@@ -294,6 +294,9 @@ def prerequisites(args):
                          f'(xcode-select -p and xcrun --show-sdk-path show what is used). clang++ said: {cxx.stderr.strip()[:300]}')
     brew = Path('/opt/homebrew')
     missing = [p for p in ('opus', 'libvpx') if not (brew / 'opt' / p / 'lib').is_dir()]
+    missing += [p for p in ('fmt', 'boost') if not (brew / 'opt' / p / 'include').is_dir()]
+    if not shutil.which('cmake', path=os.pathsep.join(TOOL_PATHS + os.get_exec_path())):
+        missing.append('cmake')
     if missing:
         raise BuildError(f'Homebrew packages missing: brew install {" ".join(missing)}')
     if not shutil.which('git', path=os.pathsep.join(TOOL_PATHS + ['/usr/bin'])):
@@ -945,13 +948,52 @@ def build_spirv_cross(tree, logs):
         logs / 'spirv-cross' / 'link.log', quiet=False)
 
 
-def check_translator(tree):
-    """The shader translation service: a native program in this repository (no .NET needed to build or to play)."""
-    translator = tree / 'prebuilt/macos-arm64/totk_xlate'
-    want = (translator.parent / 'totk_xlate.sha256').read_text().strip()
-    if not translator.is_file() or sha256(translator) != want:
-        raise BuildError(f'{translator}: not the shader translator this repository ships (its SHA-256 differs from '
-                         f'totk_xlate.sha256); check it out again, or rebuild it with games/totk/tools/totk_xlate/publish_native.sh')
+def build_shader_service(tree, logs, *, build=None, cross=None):
+    """Build incrementally from repository sources; only generated work-folder artifacts are installed."""
+    build = (build or tree/'build/totk_xlate').resolve()
+    if cross is None:
+        cross = tree/'tooling/spirv-cross'
+        if not cross.is_dir():
+            cross = build/'spirv-cross-src'
+            git_fetch(*SPIRV_CROSS, cross, logs/'fetch-shader-spirv-cross.log')
+    source = GAME/'tools/totk_xlate'
+    say('3/4 shaders: building the native C++ shader translator')
+    run(['cmake', '-S', source, '-B', build, '-DCMAKE_BUILD_TYPE=Release',
+         '-DCMAKE_OSX_DEPLOYMENT_TARGET=12.0', '-DCMAKE_OSX_ARCHITECTURES=arm64',
+         f'-DREPOSITORY={REPO}',
+         f'-DSPIRV_CROSS_SRC={cross.resolve()}'], logs/'shader-service-configure.log')
+    run(['cmake', '--build', build, '--target', 'totk_xlate', '--parallel', '4'],
+        logs/'shader-service-build.log')
+    output = tree/'build/shader-service'
+    output.mkdir(parents=True, exist_ok=True)
+    identity = (build/'compiler-identity.txt').read_text().strip()
+    temporary = output/'totk_xlate.tmp'
+    clone(build/'totk_xlate', temporary)
+    digest = sha256(temporary)
+    metadata = dict(schema=1, backend='yuzu-cpp', chain=SHADER_CHAIN, sha256=digest,
+                    compile_modes=['full', 'online-fast'],
+                    compiler_identity=identity,
+                    source='games/totk/tools/totk_xlate',
+                    yuzu_source_manifest_sha256=sha256(REPO/'vendor/yuzu/SOURCE.json'))
+    os.replace(temporary, output/'totk_xlate')
+    (output/'totk_xlate.sha256').write_text(digest+'\n')
+    (output/'totk_xlate.json').write_text(json.dumps(metadata, indent=2)+'\n')
+    return shader_translator(tree)
+
+
+def shader_translator(tree):
+    translator = tree/'build/shader-service/totk_xlate'
+    try:
+        want = translator.with_suffix('.sha256').read_text().strip()
+        metadata = json.loads(translator.with_suffix('.json').read_text())
+        modes = metadata.get('compile_modes')
+        if (metadata.get('backend') != 'yuzu-cpp' or metadata.get('chain') != SHADER_CHAIN or
+                not isinstance(modes, list) or not all(mode in modes for mode in ('full', 'online-fast')) or
+                metadata.get('sha256') != want or sha256(translator) != want):
+            raise ValueError('backend, chain, compile modes, or SHA-256 differs')
+    except (OSError, ValueError, TypeError, AttributeError) as error:
+        raise BuildError(f'{translator}: invalid Yuzu C++ service ({error}); rebuild with '
+                         'make -C games/totk shader-service') from None
     return translator
 
 
@@ -959,7 +1001,7 @@ def step_shaders(tree, logs, *, version='v0'):
     if not (tree / 'build/spirv-cross/spirv-cross').exists():
         say('3/4 shaders: building SPIRV-Cross with clang')
         build_spirv_cross(tree, logs)
-    translator = check_translator(tree)
+    translator = build_shader_service(tree, logs)
     say('3/4 shaders: discovering and translating startup shaders from your game data')
     run([tree/'.venv/bin/python', 'scripts/prepare_shader_seed.py',
          '--romfs', tree/f'extracted/{version}/romfs', '--output', tree/f'build/shader-seed/{version}',
@@ -1013,7 +1055,7 @@ def variant_folder(game):
     """Where the game keeps the source of each patched shader variant it compiled while it was played (nvn_mtl.m
     variant_library: sampler border colours, missing varyings, the layer index, no depth output, MetalFX roles), named by
     its SHA-256: the player's shader cache, ~/Library/Application Support/MacNativeGames/<game>/shader-cache/rt-<chain>."""
-    return Path.home()/'Library/Application Support/MacNativeGames'/APPS[game][2]/'shader-cache/rt-totk-native-v8-unverified/variants'
+    return Path.home()/'Library/Application Support/MacNativeGames'/APPS[game][2]/f'shader-cache/rt-{SHADER_CHAIN}/variants'
 
 
 def variant_sources(game):
@@ -1239,7 +1281,8 @@ def place_runtime(tree, app, version, logs, *, game='totk', lists=True):
     res = app / 'Contents/Resources/totk'   # the launcher's game folder, for both games (app/launcher.m)
     clone(tree / ('build/totk-native' if version == 'v0' else f'build/totk-native-{version}'), res / 'build/totk-native')
     clone(tree / 'build/spirv-cross/spirv-cross', res / 'build/spirv-cross/spirv-cross')
-    clone(tree / 'prebuilt/macos-arm64/totk_xlate', res / 'build/shader-service/totk_xlate')   # where totk_shader_rt.m looks for it
+    clone(tree / 'build/shader-service/totk_xlate', res / 'build/shader-service/totk_xlate')
+    clone(tree / 'build/shader-service/totk_xlate.json', res / 'build/shader-service/totk_xlate.json')
     for name in ('pso_manifest.tsv', 'pso_title.tsv') if lists else ():   # from the shared shader list (games/totk/Makefile)
         clone(tree / 'build' / name, res / 'build' / name)
     aliases = res / f'build/game-data/{version}/shader-seed.aliases.tsv'
@@ -1392,7 +1435,7 @@ def place_seed(tree, res, version, *, game='totk'):
     try:
         report = json.loads((seed/'seed-manifest.json').read_text())
         known = seed_digests(seed)
-        if (report['version'] != version or report['chain'] != 'totk-native-v8-unverified' or
+        if (report['version'] != version or report['chain'] != SHADER_CHAIN or
                 report['shaders'] < (8000 if game == 'totk' else 2000) or not report['files'] or any(
                     Path(name).name != name or seed_sha256(seed, name, known) != digest for name, digest in report['files'].items())):
             raise ValueError('version, translation chain or file hash differs')
@@ -1831,11 +1874,7 @@ def step_shaders_botw(tree, botw, logs, *, version='botw160'):
     if not (tree / 'build/spirv-cross/spirv-cross').exists():
         say('3/4 shaders: building SPIRV-Cross with clang')
         build_spirv_cross(tree, logs)
-    translator = tree / 'prebuilt/macos-arm64/totk_xlate'
-    want = (translator.parent / 'totk_xlate.sha256').read_text().strip()
-    if not translator.is_file() or sha256(translator) != want:
-        raise BuildError(f'{translator}: not the shader translator this repository ships (its SHA-256 differs from '
-                         f'totk_xlate.sha256); check it out again, or rebuild it with games/totk/tools/totk_xlate/publish_native.sh')
+    translator = build_shader_service(tree, logs)
     seed = tree / f'build/shader-seed/{version}'
     say('3/4 shaders: preparing the startup shaders from the game data and the shared shader list (a few minutes)')
     run([tree / '.venv/bin/python', botw / 'scripts/prepare_shader_seed.py', '--romfs', tree / f'extracted/{version}/romfs',
@@ -1928,7 +1967,8 @@ def main(argv):
         while not path.exists(): path=path.parent
         return path
     logs = work / 'logs'
-    env = dict(os.environ, PATH=os.pathsep.join(TOOL_PATHS + [os.environ.get('PATH', '/usr/bin:/bin:/usr/sbin:/sbin')]))
+    env = dict(os.environ, MNG_REPOSITORY=str(REPO),
+               PATH=os.pathsep.join(TOOL_PATHS + [os.environ.get('PATH', '/usr/bin:/bin:/usr/sbin:/sbin')]))
     t0 = time.time()
     fresh_work = not work.exists()
     # The game decides the platforms, the work folder and the disk space needed, so it is identified before those checks.
